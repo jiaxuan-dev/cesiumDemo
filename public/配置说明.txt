@@ -1,0 +1,1 @@
+修改config.json文件下的“apiUrl”为webapi部署的外网地址

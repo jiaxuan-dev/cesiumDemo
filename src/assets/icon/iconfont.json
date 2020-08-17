@@ -1,0 +1,79 @@
+{
+  "id": "1775628",
+  "name": "CreatarWebGlobe",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "CreatarWebGlobe",
+  "glyphs": [
+    {
+      "icon_id": "7476676",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e893",
+      "unicode_decimal": 59539
+    },
+    {
+      "icon_id": "5621682",
+      "name": "停止编辑",
+      "font_class": "tingzhibianji",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "5964565",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "8288874",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e852",
+      "unicode_decimal": 59474
+    },
+    {
+      "icon_id": "14145125",
+      "name": "导入",
+      "font_class": "daoru",
+      "unicode": "e741",
+      "unicode_decimal": 59201
+    },
+    {
+      "icon_id": "14145126",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e742",
+      "unicode_decimal": 59202
+    },
+    {
+      "icon_id": "10033410",
+      "name": "模型",
+      "font_class": "moxing___",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "5651353",
+      "name": "标记",
+      "font_class": "biaoji",
+      "unicode": "e660",
+      "unicode_decimal": 58976
+    },
+    {
+      "icon_id": "10048825",
+      "name": "多边形",
+      "font_class": "duobianxing",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "712340",
+      "name": "折线图",
+      "font_class": "icon-line-graph",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    }
+  ]
+}

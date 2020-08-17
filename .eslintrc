@@ -1,0 +1,20 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "jquery": true
+  },
+  "extends": ["plugin:vue/essential", "@vue/standard"],
+  "globals": {
+    "Cesium": true,
+    "Viewer":true,
+    "draw":true
+  },
+  "rules": {
+    "space-before-function-paren": "off",
+    "semi": 0
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  }
+}

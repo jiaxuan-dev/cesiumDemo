@@ -1,0 +1,78 @@
+$color-main: #ffffff;
+$color-primary: #409eff;
+
+$dark: #375367;
+$dark-with-overlay: #667080;
+$dark-lighter: #595b60;
+$grey: #01c2ff;
+$grey-lighter: rgba(0, 66, 166, 0.5);
+// todo: Fix during overhaul
+$grey-lighter2: #e6e6e640 ;
+$grey-lighter3: #e6e6e600;
+$grey-lightest: #f2f2f2;
+$field-border: #ddd;
+$overlay: rgba(255, 255, 255, 0.15);
+
+$text-black: #000;
+$text-dark: #595b60;
+// todo: Fix during overhaul
+$text-dark2: #606d80;
+$text-darker: #4d5766;
+$text-light: #ffffff;
+$text-light-dimmed: #bbbbbb;
+
+$padding: 10px;
+$padding-small: 5px;
+$padding-mini: 3px;
+
+$btn-default-line-height: 20px;
+$input-height: 40px;
+$input-height-large: 48px;
+$input-glyph-height: 24px; // This value should be $input-height * 0.6
+$input-glyph-margin: 8px; // This value should be $input-height * 0.2
+
+$modal-bg: $grey-lighter;
+$modal-tab-bg: $modal-bg;
+$modal-selected-tab-bg: $modal-tab-bg;
+$modal-text: #000;
+$modal-secondary-bg: #f6f6f7;
+$modal-secondary-bg: #f6f6f7;
+$modal-overlay: rgba(#000, 0.7);
+$modal-highlight: $color-primary;
+$modal-border: 1px solid $grey;
+$modal-bg-color:#0042a6;
+$modal-content-height: 70vh;
+$modal-header-height: $btn-default-line-height + $padding * 2;
+$dropdown-hover-color: orange;
+
+$font-size-large: 1.5rem;
+$font-size-mid-large: 1.1rem;
+$font-size-base: 1rem;
+$font-size-mid-small: 0.9rem;
+$font-size-feature-info: 0.9rem;
+// todo: update during overhaul
+$font-size-data-preview: 0.875rem;
+$font-size-button: 0.85rem;
+$font-size-small: 0.8125rem;
+$font-size-mid-mini: 0.7rem;
+$font-size-mini: 0.625rem;
+$font-size-credits: 0.7rem;
+
+$font-weight-bold: 600;
+$font-weight-medium: 500;
+$font-weight-normal: 400;
+$font-weight-light: 100;
+
+$border-color: rgba(#fff, 0.15);
+$border-style: 1px solid $border-color;
+$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
+
+$radius-max-large:10px;
+$radius-large: 5px;
+$radius-medium: 3px;
+$radius-small: 2px;
+
+//screen sizes
+$sm: 768px;
+$md: 992px;
+$lg: 1300px;

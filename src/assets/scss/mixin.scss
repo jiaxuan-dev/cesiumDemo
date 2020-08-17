@@ -1,0 +1,291 @@
+@charset "utf-8";
+@import "./variable";
+
+/*引入配置*/
+@mixin font_size($size) {
+    /*通过该函数设置字体大小，后期方便统一管理；*/
+    @include font-dpr($size);
+}
+
+@mixin font_color($color) {
+    /*通过该函数设置字体颜色，后期方便统一管理；*/
+    color: $color;
+
+    [data-theme="theme1"] & {
+        color: $font-color-theme1;
+    }
+
+    [data-theme="theme2"] & {
+        color: $font-color-theme2;
+    }
+
+    [data-theme="theme3"] & {
+        color: $font-color-theme3;
+    }
+}
+
+@mixin bg_color($color) {
+    /*通过该函数设置主题颜色，后期方便统一管理；*/
+    background-color: $color;
+
+    [data-theme="theme1"] & {
+        background-color: $background-color-theme1;
+    }
+
+    [data-theme="theme2"] & {
+        background-color: $background-color-theme2;
+    }
+
+    [data-theme="theme3"] & {
+        background-color: $background-color-theme3;
+    }
+
+    [data-theme="theme4"] & {
+        background: $background-images-theme;
+        background-size: 100% 50px;
+    }
+}
+
+/*mainView中文字自适应*/
+
+//封装方法(传入4个参数，方法必须写前面)
+@mixin allSizePX($titleFontSize,$functionItem,$projectBtn,$userBtn) {
+    /*标题字体*/
+    .projectName{
+        font-size: $titleFontSize;
+        @if $titleFontSize<= 20px {
+            margin-top: 26px !important;
+        }
+        @if $titleFontSize<= 18px {
+            margin-top: 27px !important;
+        }
+        @if $titleFontSize<= 16px{
+            margin-top: 30px !important;
+            margin-left: 13% !important;
+        }
+    }
+    .itemTitle {
+        display: $functionItem !important;
+    }
+    .projectImg{
+        display: $projectBtn !important;
+    }
+    .userManage{
+        display: $projectBtn !important;
+    }
+}
+/* css注释：设置了浏览器宽度不小于1401px时 abc 显示1200px宽度 */
+@media screen and (min-width: 1401px) {
+    @include allSizePX(
+        $titleFontSize: 22px,
+        $functionItem: inline-block,
+        $projectBtn: inline-block,
+        $userBtn: inline-block
+    );
+    .sub_Menu{
+        width: 55px;
+        height: 214px;
+    }
+    .sub_Menu b{
+        top: 94px !important;
+        right: 22px !important;
+    }
+  }
+   
+  /* 设置了浏览器宽度不大于1400px时 */
+@media screen and (max-width: 1400px) {
+    @include allSizePX(
+        $titleFontSize: 20px,
+        $functionItem: inline-block,
+        $projectBtn: inline-block,
+        $userBtn: inline-block
+    );
+    .sub_Menu{
+        width: 44px !important;
+        height: 171.2px !important;
+        left: -1px !important;
+        bottom: 52px !important;
+    }
+    .sub_Menu b{
+        top: 71px !important;
+        right: 15px !important;
+    }
+    .viewPanel{
+        width: 230.4px !important;
+        height: 422.4px !important;
+    }
+  }
+   
+  @media screen and (max-width: 1280px){
+    @include allSizePX(
+        $titleFontSize: 20px,
+        $functionItem: inline-block,
+        $projectBtn: inline-block,
+        $userBtn: inline-block
+    );
+  }
+   
+  /* 设置了浏览器宽度不大于900px时 abc 显示900px宽度 */
+  @media screen and (max-width: 1024px){
+    @include allSizePX(
+        $titleFontSize: 18px,
+        $functionItem: inline-block,
+        $projectBtn: inline-block,
+        $userBtn: inline-block
+    );
+    .sub_Menu{
+        width: 33px !important;
+        height: 128.4px !important;
+        left: 3px !important;
+        bottom: 55px !important;
+    }
+    .sub_Menu b{
+        top: 53px !important;
+        right: 11px !important;
+        font-size: 14px !important;
+    }
+    .viewPanel{
+        width: 172.8px !important;
+        height: 318.6px !important;
+    }
+    .panelContent{
+        width: calc(100%-40px) !important;
+        padding: 0px 28px 0px 14px !important;
+    }
+    .lonlatContent{
+        font-size: 10px !important;
+        margin-right: 0% !important;
+    }
+  }
+  @media screen and (max-width: 900px){
+    @include allSizePX(
+        $titleFontSize: 16px,
+        $functionItem: none,
+        $projectBtn: inline-block,
+        $userBtn: inline-block
+    );
+  }
+  @media screen and (max-width: 800px){
+    @include allSizePX(
+        $titleFontSize: 0px,
+        $functionItem: none,
+        $projectBtn: none,
+        $userBtn: none
+    );
+  }
+/*px转rem*/
+@mixin px2rem($property, $px, $px2:false, $px3:false, $px4:false) {
+    $rem: 192px;
+
+    /* 设计稿尺寸/10 */
+    @if $px and $px2 and $px3 and $px4 {
+        #{$property}: ($px / $rem) + rem ($px2 / $rem) + rem ($px3 / $rem) + rem ($px4 / $rem) + rem;
+    }
+
+    @else if $px and $px2 {
+        #{$property}: ($px / $rem) + rem ($px2 / $rem) + rem;
+        //[data-model='pad'] & {#{$property}: ($px * 1.4 / $rem) + rem ($px2 * 1.4 / $rem) + rem;}
+    }
+
+    @else {
+        #{$property}: ($px / $rem) + rem !important;
+        //[data-model='pad'] & {#{$property}: ($px * 1.4 / $rem) + rem;}
+    }
+}
+
+/*根据dpr计算font-size*/
+@mixin font-dpr($font-size) {
+    font-size: $font-size;
+
+    //[data-model="pad"] & { font-size: $font-size * 1.4; }
+    [data-dpr="2"] & {
+        font-size: $font-size * 2;
+    }
+
+    [data-dpr="3"] & {
+        font-size: $font-size * 3;
+    }
+}
+
+/*弹性盒属性*/
+%flexbox {
+    display: inline-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+/*弹性盒比例*/
+@mixin flex($num:1) {
+    -webkit-box-flex: $num;
+    -moz-box-flex: $num;
+    -webkit-flex: $num;
+    -ms-flex: $num;
+    flex: $num;
+}
+
+/*超行溢出显示省略号*/
+@mixin overflow($num:1, $fontSize:0, $lineHeight:1.5) {
+    display: -webkit-box;
+    -webkit-line-clamp: $num;
+    overflow: hidden;
+    /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+
+    /* autoprefixer: on */
+    @if $fontSize !=0 and $lineHeight {
+        /*高度需要撑开*/
+        line-height: $lineHeight;
+
+        @if $lineHeight < 1.2 {
+            line-height: 1.2;
+            /*最小需要1.2，否则在部分安卓机下第$num+1行会顶部漏出*/
+        }
+
+        height: $num * $fontSize * $lineHeight;
+
+        [data-dpr="2"] & {
+            height: $num * $fontSize * $lineHeight * 2 !important;
+        }
+
+        [data-dpr="3"] & {
+            height: $num * $fontSize * $lineHeight * 3 !important;
+        }
+    }
+}
+
+@mixin transform ($scalc){
+    
+}
+
+//transition兼容写法
+@mixin transition($content:all .2s) {
+    -moz-transition: $content;
+    -webkit-transition: $content;
+    -o-transition: $content;
+    transition: $content;
+}
+
+//transfrom兼容
+@mixin translateX($num:-50%) {
+    -ms-transform: translateX($num);
+    -moz-transform: translateX($num);
+    -webkit-transform: translateX($num);
+    -o-transform: translateX($num);
+    transform: translateX($num);
+}
+
+@mixin translateY($num:-50%) {
+    -ms-transform: translateY($num);
+    -moz-transform: translateY($num);
+    -webkit-transform: translateY($num);
+    -o-transform: translateY($num);
+    transform: translateY($num);
+}
+
+@mixin rotate($deg:90deg) {
+    -ms-transform: rotate($deg);
+    -moz-transform: rotate($deg);
+    -webkit-transform: rotate($deg);
+    -o-transform: rotate($deg);
+    transform: rotate($deg);
+}

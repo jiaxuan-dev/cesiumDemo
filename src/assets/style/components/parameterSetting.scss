@@ -1,0 +1,9 @@
+@import '../common/variables';
+
+.stretchPanel {
+    margin:15px;
+     .el-form-item__label {
+        color:$color-main;
+        text-align:center
+     }
+}

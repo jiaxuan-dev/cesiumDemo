@@ -1,0 +1,80 @@
+@import '../common/variables';
+.switch{
+    position: absolute;
+    right: 30px;
+    top: 140px;
+    z-index: 100;
+}
+.swith-control{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border:$modal-border ;
+    float: right;
+    cursor: pointer;
+    background-color: $modal-bg-color;
+    color: #fff ;
+}
+.switch-left{
+    float: right;
+}
+.switch-triangle-right {
+
+    border-top: 13px solid transparent;
+    border-left: 16px solid $grey-lighter;
+    border-bottom: 13px solid transparent;
+}
+.switch-main {
+    flex-flow: column;
+    padding: 5px;
+    background-color: $modal-bg;
+    border: $modal-border;
+    border-radius: $radius-max-large;
+    background-color: $modal-bg-color;
+    position: absolute;
+    right: 48px;
+    top: -30px;
+    div {
+        position: relative;
+        cursor: pointer;
+        width: 70px;
+        height: 60px;
+        margin: 3px;
+        border: $modal-border;
+        border-radius: $radius-large;
+        &:hover {            
+            border: 1px solid $color-primary;
+        }
+        span{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: $color-primary;
+            font-size: 12px
+        }
+    }
+
+}
+.switchActive{
+    border: 2px solid $color-primary !important;
+}
+.switch-map {
+    background-image: url(../../image/map.png);
+}
+
+.switch-image {
+    background-image: url(../../image/image.png);
+}
+
+.switch-offlineMap {
+    background-image: url(../../image/google.png);
+}
+// .switch-google {
+//     background-image: url(../../image/google.png);
+// }
+
+fade-enter-active, .fade-leave-active {
+    transition: opacity .5s ease;
+  }
