@@ -55,7 +55,7 @@ body {
   /*三角箭头的颜色*/
   scrollbar-arrow-color: rgba(9, 73, 134, 0.3);
   /*滚动条滑块按钮的颜色*/
-  scrollbar-face-color: rgba(2, 7, 22, 1);
+  scrollbar-face-color: #044184;
   /*滚动条整体颜色*/
   scrollbar-highlight-color: rgba(9, 73, 134, 0.3);
   /*滚动条阴影*/
@@ -90,7 +90,7 @@ body {
   color: white !important;
 }
 .el-select-dropdown__item.selected {
-  color: rgb(11, 3, 49) !important;
+  color: #044184 !important;
 }
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {

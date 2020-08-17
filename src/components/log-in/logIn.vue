@@ -38,7 +38,8 @@
       <p>
         <a>北京超维创想信息技术有限公司</a>
         <a> 版权所有 </a>
-        <a href="http://www.beian.miit.gov.cn/"> 京ICP备17050494号-2</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802032716"> 京公网安备11010802032716号</a>
+        <a> 京ICP备17050494号-2</a>
       </p>
     </div>
   </div>
@@ -261,7 +262,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 50px;
+    bottom: 10px;
     margin: auto;
     font-size: 14px;
     p {
@@ -269,6 +270,7 @@ export default {
     }
     a {
       text-decoration: none;
+      margin: 5px;
     }
     a:visited {
       color: #fff;

@@ -23,14 +23,14 @@
           >
             <span>影像</span>
           </div>
-          <div
+          <!-- <div
             ref="offlineMap"
             class="switch-offlineMap"
             :class="{ switchActive: states.google }"
             @click="switchMap('offlineMap')"
           >
             <span>离线地图</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </transition>

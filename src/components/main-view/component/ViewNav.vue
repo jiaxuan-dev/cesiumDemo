@@ -103,7 +103,7 @@ export default {
   padding: 3px;
   transition: 1s;
   left: -500px;
-  bottom: 64px;
+  bottom: 43px;
   overflow: hidden;
 }
 .switchBtn {
@@ -158,7 +158,7 @@ export default {
   height: 20px;
 }
 .panelContent {
-  width: calc(100% - 57px);
+  width: calc(100% - 70px);
   height: calc(100% - 42px);
   padding: 0px 21px 0px 30px;
   font-family: 'FZSongYi-Z13S';

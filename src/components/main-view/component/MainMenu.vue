@@ -45,15 +45,7 @@
           <!--列表部分结束-->
         </div>
       </div>
-      <dialogPage
-        :width="200"
-        :left="dialogLeft"
-        :top="dialogTop"
-        height="150"
-        :dialogShow="dialogShow"
-        @close="closePanel"
-        :markShow="dialogPosition"
-      >
+      <dialogPage :width="200" :left="dialogLeft" :top="dialogTop" height="150" :dialogShow="dialogShow" @close="closePanel" :markShow="dialogPosition">
         <div>
           <div class="cotant">
             <!-- <div>地层编号：{{ pro }}</div>
@@ -135,26 +127,26 @@ export default {
   },
   computed: {
     queryShow: {
-      get: function () {
+      get: function() {
         return this.$store.state.query.queryShow
       },
-      set: function (value) {
+      set: function(value) {
         this.$store.commit('query/setQueryShow', value)
       }
     },
     showResult: {
-      get: function () {
+      get: function() {
         return this.$store.state.query.showResult
       },
-      set: function (value) {
+      set: function(value) {
         this.$store.commit('query/setShowResult', value)
       }
     },
     singleLayer: {
-      get: function () {
+      get: function() {
         return this.$store.state.query.singleLayer
       },
-      set: function (value) {
+      set: function(value) {
         this.$store.commit('query/setSingleLayer', value)
       }
     }
@@ -200,10 +192,10 @@ export default {
       this.$refs.dropDown.style.top = '52px'
       var positionMenu = (document.body.clientWidth - 170) / 2 + 85 + 75 + 30
       var menuWidth = that.$refs.buttonList.clientWidth * 0.2
-      that.$refs.buttonList.children.forEach((element) => {
+      that.$refs.buttonList.children.forEach(element => {
         element.style.color = 'white'
       })
-      setTimeout(function () {
+      setTimeout(function() {
         var height = 0
         var width = 0
         that.init()
@@ -261,7 +253,7 @@ export default {
         if (this.handler) this.handler.destroy()
         this.handler = new Cesium.ScreenSpaceEventHandler(Viewer.canvas)
 
-        this.handler.setInputAction(function (movement) {
+        this.handler.setInputAction(function(movement) {
           const feature = Viewer.scene.pick(movement.position)
           if (!Cesium.defined(feature)) {
             return
@@ -285,7 +277,7 @@ export default {
           that.dialogLeft = movement.position.x - 100
           that.dialogTop = movement.position.y - 150
           // 每一帧渲染结束后，对位置进行更新
-          window.Viewer.scene.postRender.addEventListener(function () {
+          window.Viewer.scene.postRender.addEventListener(function() {
             var point = Cesium.SceneTransforms.wgs84ToWindowCoordinates(window.Viewer.scene, that.seachPoint)
             if (point) {
               that.dialogLeft = parseInt(point.x) - 100
@@ -295,7 +287,7 @@ export default {
           })
           switch (queryObj.type) {
             case 1: // 钻孔
-              that.showResult = that.$refs.mainToolbar.drillResults.find((m) => m.uuid === queryObj.parentuuid)
+              that.showResult = that.$refs.mainToolbar.drillResults.find(m => m.uuid === queryObj.parentuuid)
               that.singleLayer = [
                 { name: '层名', value: queryObj.name },
                 { name: '长度(m)', value: queryObj.length.toFixed(2) }
@@ -303,7 +295,7 @@ export default {
 
               break
             case 2: // 剖面
-              that.showResult = that.$refs.mainToolbar.sectionResults.find((m) => m.uuid === queryObj.parentuuid)
+              that.showResult = that.$refs.mainToolbar.sectionResults.find(m => m.uuid === queryObj.parentuuid)
               that.singleLayer = [
                 { name: '层名', value: queryObj.name },
                 { name: '深度(m)', value: queryObj.depth.toFixed(2) }
@@ -318,7 +310,7 @@ export default {
           }
           console.log('ID: ' + feature.id)
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
-        this.handler.setInputAction(function (movement) {
+        this.handler.setInputAction(function(movement) {
           if (that.queryActive) {
             that.queryActive = false
             if (that.selectFeature && that.selectFeature.primitive.setSelect) that.selectFeature.primitive.setSelect(false)
@@ -326,6 +318,7 @@ export default {
               that.selectFeature.primitive.color = new Cesium.Color(1, 1, 1, 1)
             }
             that.singleLayer = null
+            that.dialogShow = false
             that.handler.destroy()
           }
         }, Cesium.ScreenSpaceEventType.RIGHT_CLICK)
@@ -357,7 +350,7 @@ export default {
         this.dialogLeft = left - 110
       }
     },
-    closePanel: function (value) {
+    closePanel: function(value) {
       this.dialogShow = value
     },
     special(e) {
@@ -369,7 +362,7 @@ export default {
     mouseLeave() {
       this.$refs.dropDown.style.height = '0px'
       this.$refs.dropDown.style.top = '-1000px'
-      this.$refs.buttonList.children.forEach((element) => {
+      this.$refs.buttonList.children.forEach(element => {
         element.style.color = 'white'
       })
     }

@@ -121,7 +121,7 @@ export default {
     background-color:transparent !important;
 }
 .el-menu.el-menu--horizontal{
-    border:none;
+    border:none !important;
 }
 .menuitem{
     background: transparent;
@@ -130,7 +130,7 @@ export default {
  padding:0 15px !important;
 }
 .el-menu{
-    background-color: transparent;
+    background-color: transparent !important;
 }
 .el-menu-item:hover,.el-submenu:hover,.is-opened,.el-submenu__title:hover{
      background-color: transparent !important;
