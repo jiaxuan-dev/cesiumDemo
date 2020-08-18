@@ -5,22 +5,28 @@
     v-show="dialogShow"
   >
     <div :style="{width:(width-5)+'px',height:(height-5)+'px'}" class="dialogMsg">
-    <img @click="exit" class="exit" src="../images/资源 112.png" alt />
+      <img @click="exit" class="exit" src="../images/资源 112.png" alt />
       <slot></slot>
     </div>
     <div class="zhishibiao">
-      <span class="topsanjiao" v-show="markShow === 'top'"><img src="../images/topsanjiao.png" alt /></span>
-      <span class="rightsanjiao" v-show="markShow === 'right'"><img src="../images/rightsanjiao.png" alt /></span>
-      <span class="bottomsanjiao" v-show="markShow === 'bottom'"><img src="../images/bottomsanjiao.png" alt /></span>
-      <span class="leftsanjiao" v-show="markShow === 'left'"><img src="../images/leftsanjiao.png" alt /></span>
+      <span class="topsanjiao" v-show="markShow === 'top'">
+        <img src="../images/topsanjiao.png" alt />
+      </span>
+      <span class="rightsanjiao" v-show="markShow === 'right'">
+        <img src="../images/rightsanjiao.png" alt />
+      </span>
+      <span class="bottomsanjiao" v-show="markShow === 'bottom'">
+        <img src="../images/bottomsanjiao.png" alt />
+      </span>
+      <span class="leftsanjiao" v-show="markShow === 'left'">
+        <img src="../images/leftsanjiao.png" alt />
+      </span>
     </div>
   </div>
 </template>
 <script>
-import Vivus from 'vivus'
 export default {
   name: 'dialogPage',
-  components: { Vivus },
   props: ['top', 'left', 'width', 'height', 'dialogShow', 'markShow', 'bottom', 'right'],
   mounted() {
     document.oncontextmenu = function() {
@@ -80,28 +86,28 @@ export default {
   background: url('../images/dialogBg.png') no-repeat;
   background-size: 100% 100%;
 }
-.topsanjiao{
-  position:absolute;
+.topsanjiao {
+  position: absolute;
   top: -10px;
-  left:50%;
+  left: 50%;
   transform: translate(-50%);
 }
-.bottomsanjiao{
-  position:absolute;
+.bottomsanjiao {
+  position: absolute;
   bottom: -10px;
-  left:50%;
+  left: 50%;
   transform: translate(-50%);
 }
-.leftsanjiao{
+.leftsanjiao {
   position: absolute;
   left: -5px;
   top: 50%;
-  transform: translate(-50% , -50%);
+  transform: translate(-50%, -50%);
 }
-.rightsanjiao{
+.rightsanjiao {
   position: absolute;
   right: 0px;
   top: 50%;
-  transform: translate(50%,-50%);
+  transform: translate(50%, -50%);
 }
 </style>

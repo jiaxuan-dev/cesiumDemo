@@ -35,7 +35,7 @@
 <script>
 import DrawGraph from '../../js/cesiumDraw/DrawGraph.js'
 import * as turf from '@turf/turf'
-import { calulationLineLength ,calulationLineRectCenter } from '../../js/common/common'
+import { calulationLineLength, calulationLineRectCenter } from '../../js/common/common'
 import { closeAllLayer, digTin } from '../../js/common/layerTree'
 export default {
   name: 'digHole-form',

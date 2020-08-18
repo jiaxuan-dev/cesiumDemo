@@ -150,15 +150,15 @@ export default {
   },
   methods: {
     addModel(data, bool, children) {
-      if (bool && data.children == undefined) {
-        if (data.data != undefined) {
-          for (let i in data.data) {
-            let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(data.data[i].position.lng, data.data[i].position.lat, data.data[i].position.alt))
+      if (bool && data.children === undefined) {
+        if (data.data !== undefined) {
+          for (const i in data.data) {
+            const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(data.data[i].position.lng, data.data[i].position.lat, data.data[i].position.alt))
 
             const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(90))
             const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
             Cesium.Matrix4.multiply(modelMatrix, rotation, modelMatrix)
-            let options = {
+            const options = {
               id: data.data[i].id,
               show: true,
               scale: 1,
@@ -167,16 +167,16 @@ export default {
               url: data.data[i].url,
               modelMatrix: modelMatrix
             }
-            let model = Viewer.scene.primitives.add(Cesium.Model.fromGltf(options))
+            Viewer.scene.primitives.add(Cesium.Model.fromGltf(options))
           }
         } else {
-          let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(data.position.lng, data.position.lat, data.position.alt))
+          const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(data.position.lng, data.position.lat, data.position.alt))
 
           const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(90))
           const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
           Cesium.Matrix4.multiply(modelMatrix, rotation, modelMatrix)
 
-          let options = {
+          const options = {
             id: data.id,
             show: true,
             scale: 1,
@@ -186,9 +186,9 @@ export default {
             modelMatrix: modelMatrix
           }
 
-          let model = Viewer.scene.primitives.add(Cesium.Model.fromGltf(options))
+          const model = Viewer.scene.primitives.add(Cesium.Model.fromGltf(options))
           Viewer.flyTo(model)
-          if (data.pro != undefined) {
+          if (data.pro !== undefined) {
             model.attr = {
               label: data.label,
               des: data.des,
@@ -198,15 +198,15 @@ export default {
           }
         }
       } else {
-        for (let i in Viewer.scene.primitives._primitives) {
-          if (data.data != undefined) {
-            for (let j in data.data) {
-              if (Viewer.scene.primitives._primitives[i].id == data.data[j].id) {
+        for (const i in Viewer.scene.primitives._primitives) {
+          if (data.data !== undefined) {
+            for (const j in data.data) {
+              if (Viewer.scene.primitives._primitives[i].id === data.data[j].id) {
                 Viewer.scene.primitives.remove(Viewer.scene.primitives._primitives[i])
               }
             }
           } else {
-            if (Viewer.scene.primitives._primitives[i].id == data.id) {
+            if (Viewer.scene.primitives._primitives[i].id === data.id) {
               Viewer.scene.primitives.remove(Viewer.scene.primitives._primitives[i])
             }
           }

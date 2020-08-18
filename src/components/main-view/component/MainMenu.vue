@@ -179,16 +179,16 @@ export default {
     exit() {
       this.$refs.dropConent.style.display = 'none'
       this.$refs.dropDown.style.height = '0px'
-      for (let i in Viewer.scene.primitives._primitives) {
-        if (Viewer.scene.primitives._primitives[i].attr != undefined) {
+      for (const i in Viewer.scene.primitives._primitives) {
+        if (Viewer.scene.primitives._primitives[i].attr !== undefined) {
           Viewer.scene.primitives._primitives[i].color = new Cesium.Color(1, 1, 1, 1)
         }
       }
     },
     move(text, e) {
       this.$refs.dropDown.style.height = '0px'
-      //this.$refs.dropDown.style.left = e.x - this.$refs.dropDown.clientWidth / 2 + 'px'
-      let that = this
+      // this.$refs.dropDown.style.left = e.x - this.$refs.dropDown.clientWidth / 2 + 'px'
+      const that = this
       this.$refs.dropDown.style.top = '52px'
       var positionMenu = (document.body.clientWidth - 170) / 2 + 85 + 75 + 30
       var menuWidth = that.$refs.buttonList.clientWidth * 0.2
@@ -199,7 +199,7 @@ export default {
         var height = 0
         var width = 0
         that.init()
-        if (text != '查询' && that.handler != undefined) {
+        if (text !== '查询' && that.handler !== undefined) {
           that.handler.destroy()
         }
         if (text === '标绘') {
@@ -334,13 +334,13 @@ export default {
     // 弹框位置计算
     queryDialogPosition(top, left) {
       this.dialogPosition = 'bottom'
-      let bodyWidth = document.body.clientWidth - 200
+      const bodyWidth = document.body.clientWidth - 200
       if (top < 80) {
         // 80为主标题高度
         this.dialogPosition = 'top'
         this.dialogTop = top + 145
       } else if (left < 100) {
-        //100的一半的弹出框
+        // 100的一半的弹出框
         this.dialogPosition = 'left'
         this.dialogTop = top + 72.5
         this.dialogLeft = left + 100

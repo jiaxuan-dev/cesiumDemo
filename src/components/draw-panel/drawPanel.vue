@@ -157,7 +157,7 @@ export default {
   watch: {
     modelUrl: function(n, o) {
       if (n != null) {
-        let that = this
+        const that = this
         this.draw.addModel(
           data => {
             that.modelPanelshow = true
@@ -173,7 +173,7 @@ export default {
     }
   },
   mounted() {
-    let drawFileData = {
+    const drawFileData = {
       marker: [],
       polyline: [],
       polygon: [],
@@ -188,8 +188,8 @@ export default {
     //   this.$router.push({ path: '/' })
     // },
     editAll() {
-      if (this.graphEneityID.length != 0 || this.modelPrimitiveID.length != 0) {
-        if (Viewer.entities.getById('OperationTips') == undefined) {
+      if (this.graphEneityID.length !== 0 || this.modelPrimitiveID.length !== 0) {
+        if (Viewer.entities.getById('OperationTips') === undefined) {
           this.label = Viewer.entities.add({
             id: 'OperationTips',
             label: {
@@ -203,39 +203,39 @@ export default {
           this.label = Viewer.entities.getById('OperationTips')
         }
         this.label.label.text = '右键点击需要进行编辑的图形或模型'
-        //开启编辑
+        // 开启编辑
         this.editAllShow = false
         this.overEditAllShow = true
-        if (this.edit == undefined) {
+        if (this.edit === undefined) {
           this.edit = new EditGraph(Viewer)
         }
         const that = this
         this.Handler = new Cesium.ScreenSpaceEventHandler(Viewer.scene.canvas)
         this.Handler.setInputAction(function(e) {
-          let pickedObject = Viewer.scene.pick(e.position)
+          const pickedObject = Viewer.scene.pick(e.position)
           if (Cesium.defined(pickedObject)) {
             that.label.label.text = undefined
             that.label.position = undefined
-            if (typeof pickedObject.id == 'string') {
-              if (that.modelPrimitiveID.indexOf(pickedObject.id) != -1) {
+            if (typeof pickedObject.id === 'string') {
+              if (that.modelPrimitiveID.indexOf(pickedObject.id) !== -1) {
                 that.$refs.edit.style.left = e.position.x + 'px'
                 that.$refs.edit.style.top = e.position.y + 'px'
                 that.editShow = true
                 that.graphType = 'model'
                 that.editModelPrimitiveID = pickedObject.id
               }
-            } else if (typeof pickedObject.id == 'object') {
-              if (that.graphEneityID.indexOf(pickedObject.id.id) != -1) {
+            } else if (typeof pickedObject.id === 'object') {
+              if (that.graphEneityID.indexOf(pickedObject.id.id) !== -1) {
                 that.$refs.edit.style.left = e.position.x + 'px'
                 that.$refs.edit.style.top = e.position.y + 'px'
                 that.editShow = true
-                if (pickedObject.id.polyline != undefined) {
+                if (pickedObject.id.polyline !== undefined) {
                   that.graphType = 'polyline'
                   that.editgraphEneityID = pickedObject.id.id
-                } else if (pickedObject.id.polygon != undefined) {
+                } else if (pickedObject.id.polygon !== undefined) {
                   that.graphType = 'polygon'
                   that.editgraphEneityID = pickedObject.id.id
-                } else if (pickedObject.id.billboard != undefined) {
+                } else if (pickedObject.id.billboard !== undefined) {
                   that.graphType = 'mark'
                   that.editgraphEneityID = pickedObject.id.id
                 }
@@ -247,9 +247,9 @@ export default {
           that.editShow = false
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
         this.Handler.setInputAction(function(event) {
-          let pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y)
-          let cartesian = Viewer.scene.globe.pick(Viewer.camera.getPickRay(pick), Viewer.scene)
-          let pickedObject = Viewer.scene.pick(event.endPosition)
+          const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y)
+          const cartesian = Viewer.scene.globe.pick(Viewer.camera.getPickRay(pick), Viewer.scene)
+          // const pickedObject = Viewer.scene.pick(event.endPosition)
           // if (Cesium.defined(pickedObject)) {
           //   cartesian = that._viewer.scene.pickPosition(event.endPosition)
           // } else {
@@ -266,8 +266,8 @@ export default {
       }
     },
     overEditAll() {
-      //结束编辑
-      if (this.label != undefined) {
+      // 结束编辑
+      if (this.label !== undefined) {
         this.label.label.text = undefined
         this.label.position = undefined
       }
@@ -275,27 +275,27 @@ export default {
       this.editAllShow = true
       this.overEditAllShow = false
       this.editShow = false
-      if (this.edit != undefined) {
+      if (this.edit !== undefined) {
         this.edit.overEditAll()
       }
-      if (this.Handler != undefined) {
+      if (this.Handler !== undefined) {
         this.Handler.destroy()
       }
     },
     removeAll() {
-      //清除全部
-      for (let i in this.graphEneityID) {
+      // 清除全部
+      for (const i in this.graphEneityID) {
         Viewer.entities.remove(Viewer.entities.getById(this.graphEneityID[i]))
       }
-      for (let i in this.modelPrimitiveID) {
-        for (let j in Viewer.scene.primitives._primitives) {
-          if (Viewer.scene.primitives._primitives[j].id == this.modelPrimitiveID[i]) {
-            let index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[j])
+      for (const i in this.modelPrimitiveID) {
+        for (const j in Viewer.scene.primitives._primitives) {
+          if (Viewer.scene.primitives._primitives[j].id === this.modelPrimitiveID[i]) {
+            const index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[j])
             Viewer.scene.primitives.remove(Viewer.scene.primitives.get(index))
           }
         }
       }
-      drawFileData = {
+      window.drawFileData = {
         marker: [],
         polyline: [],
         polygon: [],
@@ -305,71 +305,71 @@ export default {
       this.modelPrimitiveID = []
     },
     defineEdit(e) {
-      //编辑
+      // 编辑
       this.editShow = false
-      if (e.target.getAttribute('data-type') == 'model') {
+      if (e.target.getAttribute('data-type') === 'model') {
         let model = null
-        for (let i in Viewer.scene.primitives._primitives) {
-          if (Viewer.scene.primitives._primitives[i].id == this.editModelPrimitiveID) {
-            let index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[i])
+        for (const i in Viewer.scene.primitives._primitives) {
+          if (Viewer.scene.primitives._primitives[i].id === this.editModelPrimitiveID) {
+            const index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[i])
             model = Viewer.scene.primitives.get(index)
           }
-        } //获取模型
+        } // 获取模型
         this.edit.editModel(model, data => {
-          for (let i in drawFileData.model) {
-            if (drawFileData.model[i].id == this.editModelPrimitiveID) {
-              drawFileData.model[i].modelMatrix = data.modelMatrix
+          for (const i in window.drawFileData.model) {
+            if (window.drawFileData.model[i].id === this.editModelPrimitiveID) {
+              window.drawFileData.model[i].modelMatrix = data.modelMatrix
             }
           }
         })
-      } else if (e.target.getAttribute('data-type') == 'mark') {
+      } else if (e.target.getAttribute('data-type') === 'mark') {
         this.edit.editMarker(Viewer.entities.getById(this.editgraphEneityID), data => {
-          for (let i in drawFileData.marker) {
-            if (drawFileData.marker[i].id == this.editgraphEneityID) {
-              drawFileData.marker[i].position = data.position
+          for (const i in window.drawFileData.marker) {
+            if (window.drawFileData.marker[i].id === this.editgraphEneityID) {
+              window.drawFileData.marker[i].position = data.position
             }
           }
         })
-      } else if (e.target.getAttribute('data-type') == 'polyline') {
+      } else if (e.target.getAttribute('data-type') === 'polyline') {
         this.edit.editPolyline(Viewer.entities.getById(this.editgraphEneityID), data => {
-          for (let i in drawFileData.polyline) {
-            if (drawFileData.polyline[i].id == this.editgraphEneityID) {
-              drawFileData.polyline[i].position = data.position
+          for (const i in window.drawFileData.polyline) {
+            if (window.drawFileData.polyline[i].id === this.editgraphEneityID) {
+              window.drawFileData.polyline[i].position = data.position
             }
           }
         })
-      } else if (e.target.getAttribute('data-type') == 'polygon') {
+      } else if (e.target.getAttribute('data-type') === 'polygon') {
         this.edit.editPolygon(Viewer.entities.getById(this.editgraphEneityID), data => {
-          for (let i in drawFileData.polygon) {
-            if (drawFileData.polygon[i].id == this.editgraphEneityID) {
-              drawFileData.polygon[i].position = data.position
+          for (const i in window.drawFileData.polygon) {
+            if (window.drawFileData.polygon[i].id === this.editgraphEneityID) {
+              window.drawFileData.polygon[i].position = data.position
             }
           }
         })
       }
     },
     attrEdit(e) {
-      //修改属性
+      // 修改属性
       this.editShow = false
-      if (e.target.getAttribute('data-type') == 'model') {
+      if (e.target.getAttribute('data-type') === 'model') {
         this.modelPrimitive = this.editModelPrimitiveID
         this.modelPattern = '编辑模型'
         this.modelPanelshow = true
         this.modelLeft = e.pageX + 'px'
         this.modelTop = e.pageY + 'px'
-      } else if (e.target.getAttribute('data-type') == 'mark') {
+      } else if (e.target.getAttribute('data-type') === 'mark') {
         this.markEntity = this.editgraphEneityID
         this.markShow = true
         this.markLeft = e.pageX + 'px'
         this.markTop = e.pageY + 'px'
         this.markPattern = '编辑标注'
-      } else if (e.target.getAttribute('data-type') == 'polyline') {
+      } else if (e.target.getAttribute('data-type') === 'polyline') {
         this.polylineEntity = this.editgraphEneityID
         this.polylineShow = true
         this.polylineLeft = e.pageX + 'px'
         this.polylineTop = e.pageY + 'px'
         this.polylinePattern = '编辑折线'
-      } else if (e.target.getAttribute('data-type') == 'polygon') {
+      } else if (e.target.getAttribute('data-type') === 'polygon') {
         this.polygonEntity = this.editgraphEneityID
         this.polygonShow = true
         this.polygonLeft = e.pageX + 'px'
@@ -378,60 +378,60 @@ export default {
       }
     },
     deletEdit(e) {
-      //删除某一个
+      // 删除某一个
       this.editShow = false
-      if (e.target.getAttribute('data-type') == 'model') {
-        for (let j in Viewer.scene.primitives._primitives) {
-          if (Viewer.scene.primitives._primitives[j].id == this.editModelPrimitiveID) {
-            let index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[j])
+      if (e.target.getAttribute('data-type') === 'model') {
+        for (const j in Viewer.scene.primitives._primitives) {
+          if (Viewer.scene.primitives._primitives[j].id === this.editModelPrimitiveID) {
+            const index = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[j])
             Viewer.scene.primitives.remove(Viewer.scene.primitives.get(index))
           }
         }
-        for (let i in drawFileData.model) {
-          if (drawFileData.model[i].id == this.editModelPrimitiveID) {
-            drawFileData.model.splice(i, 1)
+        for (const i in window.drawFileData.model) {
+          if (window.drawFileData.model[i].id === this.editModelPrimitiveID) {
+            window.drawFileData.model.splice(i, 1)
           }
         }
-        for (let i in this.modelPrimitiveID) {
-          if (this.modelPrimitiveID[i] == this.editModelPrimitiveID) {
+        for (const i in this.modelPrimitiveID) {
+          if (this.modelPrimitiveID[i] === this.editModelPrimitiveID) {
             this.modelPrimitiveID.splice(i, 1)
           }
         }
       } else {
         Viewer.entities.remove(Viewer.entities.getById(this.editgraphEneityID))
-        for (let i in this.graphEneityID) {
-          if (this.graphEneityID[i] == this.editgraphEneityID) {
+        for (const i in this.graphEneityID) {
+          if (this.graphEneityID[i] === this.editgraphEneityID) {
             this.graphEneityID.splice(i, 1)
           }
         }
-        if (e.target.getAttribute('data-type') == 'mark') {
-          for (let i in drawFileData.marker) {
-            if (drawFileData.marker[i].id == this.editgraphEneityID) {
-              drawFileData.marker.splice(i, 1)
+        if (e.target.getAttribute('data-type') === 'mark') {
+          for (const i in window.drawFileData.marker) {
+            if (window.drawFileData.marker[i].id === this.editgraphEneityID) {
+              window.drawFileData.marker.splice(i, 1)
             }
           }
-        } else if (e.target.getAttribute('data-type') == 'polyline') {
-          for (let i in drawFileData.polyline) {
-            if (drawFileData.polyline[i].id == this.editgraphEneityID) {
-              drawFileData.polyline.splice(i, 1)
+        } else if (e.target.getAttribute('data-type') === 'polyline') {
+          for (const i in window.drawFileData.polyline) {
+            if (window.drawFileData.polyline[i].id === this.editgraphEneityID) {
+              window.drawFileData.polyline.splice(i, 1)
             }
           }
-        } else if (e.target.getAttribute('data-type') == 'polygon') {
-          for (let i in drawFileData.polygon) {
-            if (drawFileData.polygon[i].id == this.editgraphEneityID) {
-              drawFileData.polygon.splice(i, 1)
+        } else if (e.target.getAttribute('data-type') === 'polygon') {
+          for (const i in window.drawFileData.polygon) {
+            if (window.drawFileData.polygon[i].id === this.editgraphEneityID) {
+              window.drawFileData.polygon.splice(i, 1)
             }
           }
         }
       }
     },
     drawGraph(type) {
-      //开始绘制
+      // 开始绘制
       const that = this
-      if (this.draw == undefined) {
+      if (this.draw === undefined) {
         this.draw = new DrawGraph(Viewer)
       }
-      if (type == 'mark') {
+      if (type === 'mark') {
         this.draw.drawMark(data => {
           that.markEntity = data.id
           that.markShow = true
@@ -440,7 +440,7 @@ export default {
           that.markTop = data.position.y + 'px'
           that.markPattern = '添加标注'
         })
-      } else if (type == 'polyline') {
+      } else if (type === 'polyline') {
         this.draw.drawPolyline(data => {
           that.polylineEntity = data.id
           that.polylineShow = true
@@ -455,7 +455,7 @@ export default {
           //   isPathShow: true
           // })
         })
-      } else if (type == 'polygon') {
+      } else if (type === 'polygon') {
         this.draw.drawPolygon(
           data => {
             that.polygonEntity = data.id
@@ -469,7 +469,7 @@ export default {
           },
           { height: 2 }
         )
-      } else if (type == 'model') {
+      } else if (type === 'model') {
         this.modelShow = true
         this.modelUrl = 'model/Wood_Tower.glb'
         this.draw.addModel(
@@ -510,31 +510,31 @@ export default {
       this.$refs.file.click()
     },
     selectFile(event) {
-      //导入文件读取文件数据
-      let that = this
-      let reader = new FileReader()
-      let file = event.target.files[0]
+      // 导入文件读取文件数据
+      const that = this
+      const reader = new FileReader()
+      const file = event.target.files[0]
       reader.readAsText(file)
       reader.onload = function() {
         that.loadGraph(JSON.parse(this.result))
-        drawFileData = JSON.parse(this.result)
+        window.drawFileData = JSON.parse(this.result)
       }
     },
     saveFlie() {
       // 导出生成json文件
-      if (JSON.stringify(drawFileData) == '{"marker":[],"polyline":[],"polygon":[],"model":[]}') {
+      if (JSON.stringify(window.drawFileData) === '{"marker":[],"polyline":[],"polygon":[],"model":[]}') {
         this.$message({
           message: '请先绘制图案',
           type: 'warning'
         })
       } else {
-        var blob = new Blob([JSON.stringify(drawFileData)], { type: '' })
+        var blob = new Blob([JSON.stringify(window.drawFileData)], { type: '' })
         saveAs(blob, '标绘' + new Date().getTime() + '.json')
       }
     },
     loadGraph(data) {
-      //导入文件后加载上标注
-      for (let i in data.marker) {
+      // 导入文件后加载上标注
+      for (const i in data.marker) {
         Viewer.entities.add({
           id: data.marker[i].id,
           position: data.marker[i].position,
@@ -551,47 +551,47 @@ export default {
         })
         this.graphEneityID.push(data.marker[i].id)
       }
-      //导入文件后加载上折线
-      for (let i in data.polyline) {
-        let option = {
+      // 导入文件后加载上折线
+      for (const i in data.polyline) {
+        const option = {
           id: data.polyline[i].id,
           polyline: {
             show: true,
             positions: data.polyline[i].position,
             width: data.polyline[i].lineWidth,
             clampToGround: data.polyline[i].Ground,
-            arcType: data.polyline[i].lineType == '大地线' ? Cesium.ArcType.GEODESIC : Cesium.ArcType.NONE,
+            arcType: data.polyline[i].lineType === '大地线' ? Cesium.ArcType.GEODESIC : Cesium.ArcType.NONE,
             material: this.colorDataChange(data.polyline[i].color)
           }
         }
-        if (data.polyline[i].Material == '轮廓') {
+        if (data.polyline[i].Material === '轮廓') {
           option.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
             color: this.colorDataChange(data.polyline[i].color),
             outlineColor: this.colorDataChange(data.polyline[i].OutLineColor),
             outlineWidth: data.polyline[i].OutLineWidth
           })
-        } else if (data.polyline[i].Material == '虚线') {
+        } else if (data.polyline[i].Material === '虚线') {
           option.polyline.material = new Cesium.PolylineDashMaterialProperty({
             color: this.colorDataChange(data.polyline[i].color),
             gapColor: this.colorDataChange(data.polyline[i].clearanceColor),
             dashLength: data.polyline[i].clearanceLength,
             dashPattern: 255
           })
-        } else if (data.polyline[i].Material == '发光') {
+        } else if (data.polyline[i].Material === '发光') {
           option.polyline.material = new Cesium.PolylineGlowMaterialProperty({
             color: this.colorDataChange(data.polyline[i].color),
             glowPower: data.polyline[i].brightness / 100,
             taperPower: data.polyline[i].GradientIntensity / 100
           })
-        } else if (data.polyline[i].Material == '箭头') {
+        } else if (data.polyline[i].Material === '箭头') {
           option.polyline.material = new Cesium.PolylineArrowMaterialProperty(this.colorDataChange(data.polyline[i].color))
         }
         Viewer.entities.add(option)
         this.graphEneityID.push(data.polyline[i].id)
       }
-      //导入文件后加载上多边形
-      for (let i in data.polygon) {
-        let option = {
+      // 导入文件后加载上多边形
+      for (const i in data.polygon) {
+        const option = {
           id: data.polygon[i].id,
           polygon: {
             hierarchy: new Cesium.PolygonHierarchy(data.polygon[i].position),
@@ -601,29 +601,29 @@ export default {
           }
         }
         if (data.polygon[i].fill) {
-          if (data.polygon[i].Material == '纯色') {
+          if (data.polygon[i].Material === '纯色') {
             option.polygon.material = this.colorDataChange(data.polygon[i].FillColor)
-          } else if (data.polygon[i].Material == '图片') {
+          } else if (data.polygon[i].Material === '图片') {
             option.polygon.material = new Cesium.ImageMaterialProperty({
               image: data.polygon[i].image,
               repeat: data.polygon[i].imageNum,
               transparent: true
             })
-          } else if (data.polygon[i].Material == '网格') {
+          } else if (data.polygon[i].Material === '网格') {
             option.polygon.material = new Cesium.GridMaterialProperty({
               color: this.colorDataChange(data.polygon[i].FillColor),
               cellAlpha: data.polygon[i].gridAlpha,
               lineCount: data.polygon[i].gridNum,
               lineThickness: data.polygon[i].gridLineWidth
             })
-          } else if (data.polygon[i].Material == '条纹') {
+          } else if (data.polygon[i].Material === '条纹') {
             option.polygon.material = new Cesium.StripeMaterialProperty({
               evenColor: this.colorDataChange(data.polygon[i].EvenColor),
               oddColor: this.colorDataChange(data.polygon[i].OddColor),
               repeat: data.polygon[i].stripeNum,
               orientation: data.polygon[i].orientation
             })
-          } else if (data.polygon[i].Material == '棋盘') {
+          } else if (data.polygon[i].Material === '棋盘') {
             option.polygon.material = new Cesium.CheckerboardMaterialProperty({
               evenColor: this.colorDataChange(data.polygon[i].EvenColor),
               oddColor: this.colorDataChange(data.polygon[i].OddColor),
@@ -635,15 +635,15 @@ export default {
         if (data.polygon[i].outline) {
           option.polygon.outlineColor = this.colorDataChange(data.polygon[i].OutLineColor)
         }
-        if (data.polygon[i].ground != 1) {
+        if (data.polygon[i].ground !== 1) {
           option.polygon.height = data.polygon[i].height
         }
-        let a = Viewer.entities.add(option)
+        Viewer.entities.add(option)
         this.graphEneityID.push(data.polygon[i].id)
       }
-      //导入文件后加载模型
-      for (let i in data.model) {
-        let option = {
+      // 导入文件后加载模型
+      for (const i in data.model) {
+        const option = {
           id: data.model[i].id,
           url: data.model[i].url,
           modelMatrix: data.model[i].modelMatrix,
@@ -662,11 +662,11 @@ export default {
       }
     },
     colorDataChange(rgb) {
-      //获取到的颜色数据改变格式
+      // 获取到的颜色数据改变格式
       if (rgb != null) {
         this.colorRgbArr = []
-        let arr = rgb.substring(5, rgb.length - 1).split(', ')
-        for (let i in arr) {
+        const arr = rgb.substring(5, rgb.length - 1).split(', ')
+        for (const i in arr) {
           this.colorRgbArr.push(Number(arr[i]))
         }
         return new Cesium.Color(this.colorRgbArr[0] / 255, this.colorRgbArr[1] / 255, this.colorRgbArr[2] / 255, this.colorRgbArr[3])

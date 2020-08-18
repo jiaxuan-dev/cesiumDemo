@@ -11,14 +11,12 @@
 <script>
 import mainMenu from './component/MainMenu.vue'
 import viewNav from './component/ViewNav.vue'
-import dialogPage from './component/DialogPage.vue'
 import slideBar from './component/SlideBar.vue'
 export default {
   name: 'mainView',
   components: {
     mainMenu,
     viewNav,
-    dialogPage,
     slideBar
   }
 }

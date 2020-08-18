@@ -32,9 +32,9 @@ export default {
     }
   },
   mounted() {
-    let that = this
-    let timer = setInterval(function() {
-      if (Viewer != undefined) {
+    const that = this
+    const timer = setInterval(function() {
+      if (Viewer !== undefined) {
         that.initStatusBar(Viewer)
         window.clearInterval(timer)
       }
@@ -67,13 +67,13 @@ export default {
       }
     },
     initStatusBar(viewer) {
-      let that = this
+      const that = this
       var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas)
       handler.setInputAction(function(event) {
-        let pick1 = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y)
-        let cartesian = viewer.scene.globe.pick(viewer.camera.getPickRay(pick1), viewer.scene)
+        const pick1 = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y)
+        const cartesian = viewer.scene.globe.pick(viewer.camera.getPickRay(pick1), viewer.scene)
         if (Cesium.defined(cartesian)) {
-          let Cartographic = Cesium.Cartographic.fromCartesian(cartesian)
+          const Cartographic = Cesium.Cartographic.fromCartesian(cartesian)
           that.lat = Cesium.Math.toDegrees(Cartographic.latitude).toFixed(2)
           that.lng = Cesium.Math.toDegrees(Cartographic.longitude).toFixed(2)
         }

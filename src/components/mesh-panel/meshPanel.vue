@@ -35,7 +35,6 @@
   </dialogPage>
 </template>
 <script>
-import { saveAs } from 'file-saver'
 import DynamicMesh from './../../js/DynamicMesh/DynamicMesh'
 import meshData from './../../assets/data/cjl.json'
 export default {
@@ -95,12 +94,12 @@ export default {
       this.$refs.file.click()
     },
     changeSpeed() {
-      if (this.mesh != undefined) {
+      if (this.mesh !== undefined) {
         this.mesh.setIntervalTime(this.intervalTime / 100)
       }
     },
     PauseOrContinue() {
-      if (this.mesh != undefined) {
+      if (this.mesh !== undefined) {
         this.mesh.PauseOrContinue(this.PauseOrContinueflag)
         if (this.PauseOrContinueflag) {
           this.PauseOrContinueflag = false
@@ -115,7 +114,7 @@ export default {
       this.visible = bool
     },
     remove() {
-      if (this.mesh != undefined) {
+      if (this.mesh !== undefined) {
         this.mesh.remove()
       }
       this.data = []
@@ -141,28 +140,28 @@ export default {
     },
     readFile(file) {
       let fileIndex = 0
-      let that = this
-      let reader = new FileReader()
+      const that = this
+      const reader = new FileReader()
       reader.readAsText(file[fileIndex])
       reader.onload = function() {
         // console.log(this.result.split('\n'))
-        let allArray = this.result.split('\n')
-        let heightArray = []
+        const allArray = this.result.split('\n')
+        const heightArray = []
         for (const i in allArray) {
           if (i > 5 && i < allArray.length - 1) {
-            let altmixarr = allArray[i].split(' ')
+            const altmixarr = allArray[i].split(' ')
             altmixarr.pop()
             heightArray.push(altmixarr)
           }
         }
         // console.log(heightArray)
 
-        let mixncols = allArray[0].split(' ')
-        let mixnrows = allArray[1].split(' ')
-        let mixlng = allArray[2].split(' ')
-        let mixlat = allArray[3].split(' ')
-        let mixcellsize = allArray[4].split(' ')
-        let dataDes = {}
+        const mixncols = allArray[0].split(' ')
+        const mixnrows = allArray[1].split(' ')
+        const mixlng = allArray[2].split(' ')
+        const mixlat = allArray[3].split(' ')
+        const mixcellsize = allArray[4].split(' ')
+        const dataDes = {}
         dataDes.ncols = Number(mixncols[mixncols.length - 1])
         dataDes.nrows = Number(mixnrows[mixnrows.length - 1])
         dataDes.xllcorner = Number(mixlng[mixlng.length - 1])

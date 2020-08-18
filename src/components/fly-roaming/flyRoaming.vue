@@ -175,24 +175,24 @@ export default {
       }
     },
     changeLngLatAlt() {
-      let arr = []
-      for (let i in this.position) {
+      const arr = []
+      for (const i in this.position) {
         arr.push(this.position[i].longitude)
         arr.push(this.position[i].latitude)
         arr.push(this.position[i].height)
       }
-      let Cartesian3 = Cesium.Cartesian3.fromDegreesArrayHeights(arr)
+      const Cartesian3 = Cesium.Cartesian3.fromDegreesArrayHeights(arr)
       Viewer.entities.getById(this.RouteID).polyline.positions = Cartesian3
     },
     changeHeight() {
-      let arr = []
-      for (let i in this.position) {
+      const arr = []
+      for (const i in this.position) {
         this.position[i].height = this.height
         arr.push(this.position[i].longitude)
         arr.push(this.position[i].latitude)
         arr.push(this.position[i].height)
       }
-      let Cartesian3 = Cesium.Cartesian3.fromDegreesArrayHeights(arr)
+      const Cartesian3 = Cesium.Cartesian3.fromDegreesArrayHeights(arr)
       Viewer.entities.getById(this.RouteID).polyline.positions = Cartesian3
     },
     plan() {
@@ -204,37 +204,37 @@ export default {
       this.roamingAttr.isSpline = false
       this.position = []
       this.positionIndex = 1
-      let that = this
-      if (this.draw == undefined) {
+      const that = this
+      if (this.draw === undefined) {
         this.draw = new DrawGraph(Viewer)
       }
-      if (this.RouteID != '' && Viewer.entities.getById(this.RouteID) != undefined) {
+      if (this.RouteID !== '' && Viewer.entities.getById(this.RouteID) !== undefined) {
         Viewer.entities.remove(Viewer.entities.getById(this.RouteID))
       }
 
       this.draw.drawPolyline(
         data => {
           that.RouteID = data.id
-          let canHeight = Viewer.scene.canvas.height
+          const canHeight = Viewer.scene.canvas.height
           if (data.position.y + 5 / canHeight > (canHeight - 600) / canHeight) {
             this.top = canHeight - 650
           } else {
             this.top = data.position.y + 5
           }
 
-          let canWidth = Viewer.scene.canvas.width
+          const canWidth = Viewer.scene.canvas.width
           if (data.position.x / canWidth > (canWidth - 300) / canWidth) {
             this.left = canWidth - 300
           } else {
             this.left = data.position.x
           }
           that.visible1 = true
-          let lnglatalt = []
-          for (let i in data.cartesian) {
-            let Cartographic = Cesium.Cartographic.fromCartesian(data.cartesian[i])
-            let latitude = Cesium.Math.toDegrees(Cartographic.latitude)
-            let longitude = Cesium.Math.toDegrees(Cartographic.longitude)
-            let height = this.height
+          const lnglatalt = []
+          for (const i in data.cartesian) {
+            const Cartographic = Cesium.Cartographic.fromCartesian(data.cartesian[i])
+            const latitude = Cesium.Math.toDegrees(Cartographic.latitude)
+            const longitude = Cesium.Math.toDegrees(Cartographic.longitude)
+            const height = this.height
             that.position.push({ longitude, latitude, height })
             lnglatalt.push(longitude)
             lnglatalt.push(latitude)
@@ -249,8 +249,8 @@ export default {
     },
     start() {
       this.visible1 = false
-      let positions = []
-      for (let i in this.roamingAttr.Lines) {
+      const positions = []
+      for (const i in this.roamingAttr.Lines) {
         positions.push(Number(this.roamingAttr.Lines[i].longitude))
         positions.push(Number(this.roamingAttr.Lines[i].latitude))
         positions.push(Number(this.roamingAttr.Lines[i].height))
@@ -295,7 +295,7 @@ export default {
       }
     },
     suspend() {
-      if (this.roaming != undefined) {
+      if (this.roaming !== undefined) {
         if (this.suspendFlag) {
           this.roaming.PauseOrContinue(false)
           this.suspendName = '继续漫游'
@@ -309,13 +309,13 @@ export default {
     },
     stop() {
       this.position = []
-      if (this.roaming != undefined) {
+      if (this.roaming !== undefined) {
         this.roaming.EndRoaming()
         this.suspendName = '暂停漫游'
         this.suspendFlag = true
         this.roaming = undefined
       }
-      if (this.RouteID != '' && Viewer.entities.getById(this.RouteID) != undefined) {
+      if (this.RouteID !== '' && Viewer.entities.getById(this.RouteID) !== undefined) {
         Viewer.entities.remove(Viewer.entities.getById(this.RouteID))
       }
     },

@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     move(e) {
-      let that = this
+      // const that = this
       if (!this.viewPanelFlag) {
         this.$refs.viewPanel.style.left = '15px'
         // this.$refs.panel.style.height = '375px'

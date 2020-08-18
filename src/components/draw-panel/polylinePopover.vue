@@ -219,13 +219,13 @@ export default {
   watch: {
     polylineShow: function(n, o) {
       this.visible = n
-      if (n && this.pattern == '编辑折线') {
-        let polyline = Viewer.entities.getById(this.polylineEntity)
+      if (n && this.pattern === '编辑折线') {
+        const polyline = Viewer.entities.getById(this.polylineEntity)
         this.PolylineAttr.lineWidth = polyline.polyline.width._value
-        if (polyline.polyline.clampToGround != undefined) {
+        if (polyline.polyline.clampToGround !== undefined) {
           this.PolylineAttr.Ground = polyline.polyline.clampToGround._value
         }
-        if (polyline.polyline.arcType == undefined || polyline.polyline.arcType._value == 1) {
+        if (polyline.polyline.arcType === undefined || polyline.polyline.arcType._value === 1) {
           this.PolylineAttr.lineType = '大地线'
         } else {
           this.PolylineAttr.lineType = '直线'
@@ -293,7 +293,7 @@ export default {
       }
     },
     left: function(n, o) {
-      let canWidth = Viewer.scene.canvas.width
+      const canWidth = Viewer.scene.canvas.width
       if (n.slice(0, n.length - 2) / canWidth > (canWidth - this.width) / canWidth) {
         this.leftVal = canWidth - this.width
       } else {
@@ -301,8 +301,8 @@ export default {
       }
     },
     top: function(n, o) {
-      let canHeight = Viewer.scene.canvas.height
-      let height = 80 + Number(this.$refs.polylinePanel.style.height.slice(0, this.$refs.polylinePanel.style.height.length - 2))
+      const canHeight = Viewer.scene.canvas.height
+      const height = 80 + Number(this.$refs.polylinePanel.style.height.slice(0, this.$refs.polylinePanel.style.height.length - 2))
       if (n.slice(0, n.length - 2) / canHeight > (canHeight - height) / canHeight) {
         this.topVal = canHeight - height
       } else {
@@ -312,12 +312,12 @@ export default {
   },
   methods: {
     init() {
-      //绘制完后把所有选择的属性重置
+      // 绘制完后把所有选择的属性重置
       Object.assign(this.$data, this.$options.data())
     },
     define() {
-      //确定按钮
-      let polylineData = {
+      // 确定按钮
+      const polylineData = {
         id: this.polylineEntity,
         lineWidth: this.PolylineAttr.lineWidth,
         color: this.PolylineAttr.color,
@@ -326,63 +326,63 @@ export default {
         Ground: this.PolylineAttr.Ground,
         position: Viewer.entities.getById(this.polylineEntity).polyline.positions._value
       }
-      if (this.PolylineAttr.lineMaterial == '轮廓') {
+      if (this.PolylineAttr.lineMaterial === '轮廓') {
         polylineData.OutLineColor = this.PolylineAttr.OutLineColor
         polylineData.OutLineWidth = this.PolylineAttr.OutLineWidth
-      } else if (this.PolylineAttr.lineMaterial == '虚线') {
+      } else if (this.PolylineAttr.lineMaterial === '虚线') {
         polylineData.clearanceLength = this.PolylineAttr.clearanceLength
         polylineData.clearanceColor = this.PolylineAttr.clearanceColor
-      } else if (this.PolylineAttr.lineMaterial == '发光') {
+      } else if (this.PolylineAttr.lineMaterial === '发光') {
         polylineData.brightness = this.PolylineAttr.brightness
         polylineData.GradientIntensity = this.PolylineAttr.GradientIntensity
       }
-      if (this.pattern == '编辑折线') {
-        for (let i in drawFileData.polyline) {
-          if (drawFileData.polyline[i].id == polylineData.id) {
-            drawFileData.polyline[i] = polylineData
+      if (this.pattern === '编辑折线') {
+        for (const i in window.drawFileData.polyline) {
+          if (window.drawFileData.polyline[i].id === polylineData.id) {
+            window.drawFileData.polyline[i] = polylineData
             break
           }
         }
       } else {
-        drawFileData.polyline.push(polylineData)
+        window.drawFileData.polyline.push(polylineData)
       }
-      //数据预存
+      // 数据预存
       this.$emit('define', false)
       this.init()
     },
     cancel() {
-      //取消按钮
+      // 取消按钮
       this.$emit('cancel', false)
-      if (this.pattern == '编辑折线') {
-        for (let i in drawFileData.polyline) {
-          if (drawFileData.polyline[i].id == this.polylineEntity) {
+      if (this.pattern === '编辑折线') {
+        for (const i in window.drawFileData.polyline) {
+          if (window.drawFileData.polyline[i].id === this.polylineEntity) {
             Viewer.entities.getById(this.polylineEntity).polyline.show = true
-            Viewer.entities.getById(this.polylineEntity).polyline.positions = drawFileData.polyline[i].position
-            Viewer.entities.getById(this.polylineEntity).polyline.width = drawFileData.polyline[i].lineWidth
-            Viewer.entities.getById(this.polylineEntity).polyline.clampToGround = drawFileData.polyline[i].Ground
-            Viewer.entities.getById(this.polylineEntity).polyline.arcType = drawFileData.polyline[i].lineType == '大地线' ? Cesium.ArcType.GEODESIC : Cesium.ArcType.NONE
-            Viewer.entities.getById(this.polylineEntity).polyline.material = this.colorDataChange(drawFileData.polyline[i].color)
-            if (drawFileData.polyline[i].Material == '轮廓') {
+            Viewer.entities.getById(this.polylineEntity).polyline.positions = window.drawFileData.polyline[i].position
+            Viewer.entities.getById(this.polylineEntity).polyline.width = window.drawFileData.polyline[i].lineWidth
+            Viewer.entities.getById(this.polylineEntity).polyline.clampToGround = window.drawFileData.polyline[i].Ground
+            Viewer.entities.getById(this.polylineEntity).polyline.arcType = window.drawFileData.polyline[i].lineType === '大地线' ? Cesium.ArcType.GEODESIC : Cesium.ArcType.NONE
+            Viewer.entities.getById(this.polylineEntity).polyline.material = this.colorDataChange(window.drawFileData.polyline[i].color)
+            if (window.drawFileData.polyline[i].Material === '轮廓') {
               Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineOutlineMaterialProperty({
-                color: this.colorDataChange(drawFileData.polyline[i].color),
-                outlineColor: this.colorDataChange(drawFileData.polyline[i].OutLineColor),
-                outlineWidth: drawFileData.polyline[i].OutLineWidth
+                color: this.colorDataChange(window.drawFileData.polyline[i].color),
+                outlineColor: this.colorDataChange(window.drawFileData.polyline[i].OutLineColor),
+                outlineWidth: window.drawFileData.polyline[i].OutLineWidth
               })
-            } else if (drawFileData.polyline[i].Material == '虚线') {
+            } else if (window.drawFileData.polyline[i].Material === '虚线') {
               Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineDashMaterialProperty({
-                color: this.colorDataChange(drawFileData.polyline[i].color),
-                gapColor: this.colorDataChange(drawFileData.polyline[i].clearanceColor),
-                dashLength: drawFileData.polyline[i].clearanceLength,
+                color: this.colorDataChange(window.drawFileData.polyline[i].color),
+                gapColor: this.colorDataChange(window.drawFileData.polyline[i].clearanceColor),
+                dashLength: window.drawFileData.polyline[i].clearanceLength,
                 dashPattern: 255
               })
-            } else if (drawFileData.polyline[i].Material == '发光') {
+            } else if (window.drawFileData.polyline[i].Material === '发光') {
               Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineGlowMaterialProperty({
-                color: this.colorDataChange(drawFileData.polyline[i].color),
-                glowPower: drawFileData.polyline[i].brightness / 100,
-                taperPower: drawFileData.polyline[i].GradientIntensity / 100
+                color: this.colorDataChange(window.drawFileData.polyline[i].color),
+                glowPower: window.drawFileData.polyline[i].brightness / 100,
+                taperPower: window.drawFileData.polyline[i].GradientIntensity / 100
               })
-            } else if (drawFileData.polyline[i].Material == '箭头') {
-              Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineArrowMaterialProperty(this.colorDataChange(drawFileData.polyline[i].color))
+            } else if (window.drawFileData.polyline[i].Material === '箭头') {
+              Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineArrowMaterialProperty(this.colorDataChange(window.drawFileData.polyline[i].color))
             }
           }
         }
@@ -392,11 +392,11 @@ export default {
       this.init()
     },
     colorDataChange(rgb) {
-      //获取到的颜色数据改变格式
+      // 获取到的颜色数据改变格式
       if (rgb != null) {
         this.colorRgbArr = []
-        let arr = rgb.substring(5, rgb.length - 1).split(', ')
-        for (let i in arr) {
+        const arr = rgb.substring(5, rgb.length - 1).split(', ')
+        for (const i in arr) {
           this.colorRgbArr.push(Number(arr[i]))
         }
         return new Cesium.Color(this.colorRgbArr[0] / 255, this.colorRgbArr[1] / 255, this.colorRgbArr[2] / 255, this.colorRgbArr[3])
@@ -405,19 +405,19 @@ export default {
       }
     },
     linear() {
-      //线型的变换
-      if (this.PolylineAttr.lineType == '直线') {
+      // 线型的变换
+      if (this.PolylineAttr.lineType === '直线') {
         this.AttachmentShow = true
         Viewer.entities.getById(this.polylineEntity).polyline.clampToGround = false
         this.PolylineAttr.Ground = false
         Viewer.entities.getById(this.polylineEntity).polyline.arcType = Cesium.ArcType.NONE
-      } else if (this.PolylineAttr.lineType == '大地线') {
+      } else if (this.PolylineAttr.lineType === '大地线') {
         this.AttachmentShow = false
         Viewer.entities.getById(this.polylineEntity).polyline.arcType = Cesium.ArcType.GEODESIC
       }
     },
     Attachment() {
-      //是否贴地
+      // 是否贴地
       if (this.PolylineAttr.Ground) {
         Viewer.entities.getById(this.polylineEntity).polyline.clampToGround = true
       } else {
@@ -425,7 +425,7 @@ export default {
       }
     },
     SetMaterials() {
-      //设置材质
+      // 设置材质
       switch (this.PolylineAttr.lineMaterial) {
         case '纯色':
           this.outline = false
@@ -475,64 +475,64 @@ export default {
       }
     },
     changeLineColor(color) {
-      //折线的颜色的变换
-      if (this.PolylineAttr.lineMaterial == '纯色') {
+      // 折线的颜色的变换
+      if (this.PolylineAttr.lineMaterial === '纯色') {
         Viewer.entities.getById(this.polylineEntity).polyline.material = this.colorDataChange(color)
-      } else if (this.PolylineAttr.lineMaterial == '箭头') {
+      } else if (this.PolylineAttr.lineMaterial === '箭头') {
         Viewer.entities.getById(this.polylineEntity).polyline.material = new Cesium.PolylineArrowMaterialProperty(this.colorDataChange(color))
       } else {
         Viewer.entities.getById(this.polylineEntity).polyline.material.color = this.colorDataChange(color)
       }
     },
     lineWidth() {
-      //折线的宽
+      // 折线的宽
       if (this.PolylineAttr.lineWidth < 0) {
         this.PolylineAttr.lineWidth = 1
-      } else if (Number(this.PolylineAttr.lineWidth) == NaN) {
+      } else if (isNaN(Number(this.PolylineAttr.lineWidth))) {
         this.PolylineAttr.lineWidth = 1
       }
       Viewer.entities.getById(this.polylineEntity).polyline.width = this.PolylineAttr.lineWidth
     },
     OutLineWidth() {
-      //带轮廓的折线的轮廓宽的设置
-      if (this.PolylineAttr.lineMaterial == '轮廓') {
+      // 带轮廓的折线的轮廓宽的设置
+      if (this.PolylineAttr.lineMaterial === '轮廓') {
         if (this.PolylineAttr.OutLineWidth < 0) {
           this.PolylineAttr.OutLineWidth = 1
-        } else if (Number(this.PolylineAttr.OutLineWidth) == NaN) {
+        } else if (isNaN(Number(this.PolylineAttr.OutLineWidth))) {
           this.PolylineAttr.OutLineWidth = 1
         }
         Viewer.entities.getById(this.polylineEntity).polyline.material.outlineWidth = this.PolylineAttr.OutLineWidth
       }
     },
     changeOutLineColor(color) {
-      //带轮廓的折线的轮廓颜色的设置
-      if (this.PolylineAttr.lineMaterial == '轮廓') {
+      // 带轮廓的折线的轮廓颜色的设置
+      if (this.PolylineAttr.lineMaterial === '轮廓') {
         Viewer.entities.getById(this.polylineEntity).polyline.material.outlineColor = this.colorDataChange(color)
       }
     },
     clearanceLength() {
-      //改变虚线空白的长度
-      if (this.PolylineAttr.lineMaterial == '虚线') {
+      // 改变虚线空白的长度
+      if (this.PolylineAttr.lineMaterial === '虚线') {
         if (this.PolylineAttr.clearanceLength < 0) {
           this.PolylineAttr.clearanceLength = 1
-        } else if (Number(this.PolylineAttr.clearanceLength) == NaN) {
+        } else if (isNaN(Number(this.PolylineAttr.clearanceLength))) {
           this.PolylineAttr.clearanceLength = 1
         }
         Viewer.entities.getById(this.polylineEntity).polyline.material.dashLength = this.PolylineAttr.clearanceLength
       }
     },
     clearanceColor(color) {
-      //改变虚线的空白颜色
-      if (this.PolylineAttr.lineMaterial == '虚线') {
+      // 改变虚线的空白颜色
+      if (this.PolylineAttr.lineMaterial === '虚线') {
         Viewer.entities.getById(this.polylineEntity).polyline.material.gapColor = this.colorDataChange(color)
       }
     },
     brightness() {
-      //发光折线的亮度
-      if (this.PolylineAttr.lineMaterial == '发光') {
+      // 发光折线的亮度
+      if (this.PolylineAttr.lineMaterial === '发光') {
         if (this.PolylineAttr.brightness < 0) {
           this.PolylineAttr.brightness = 1
-        } else if (Number(this.PolylineAttr.brightness) == NaN) {
+        } else if (isNaN(Number(this.PolylineAttr.brightness))) {
           this.PolylineAttr.brightness = 1
         } else if (this.PolylineAttr.brightness > 100) {
           this.PolylineAttr.brightness = 100
@@ -541,11 +541,11 @@ export default {
       }
     },
     GradientIntensity() {
-      //渐变的强度
-      if (this.PolylineAttr.lineMaterial == '发光') {
+      // 渐变的强度
+      if (this.PolylineAttr.lineMaterial === '发光') {
         if (this.PolylineAttr.GradientIntensity < 0) {
           this.PolylineAttr.GradientIntensity = 1
-        } else if (Number(this.PolylineAttr.GradientIntensity) == NaN) {
+        } else if (isNaN(Number(this.PolylineAttr.GradientIntensity))) {
           this.PolylineAttr.GradientIntensity = 1
         } else if (this.PolylineAttr.GradientIntensity > 100) {
           this.PolylineAttr.GradientIntensity = 100

@@ -198,17 +198,17 @@ export default {
     },
     modelPrimitive: function(n, o) {
       if (n != null) {
-        for (let i in Viewer.scene.primitives._primitives) {
-          if (Viewer.scene.primitives._primitives[i].id == n) {
+        for (const i in Viewer.scene.primitives._primitives) {
+          if (Viewer.scene.primitives._primitives[i].id === n) {
             this.modelIndex = Viewer.scene.primitives._primitives.indexOf(Viewer.scene.primitives._primitives[i])
           }
         }
-        if (this.pattern == '编辑模型' && this.visible) {
+        if (this.pattern === '编辑模型' && this.visible) {
           this.zoom = Viewer.scene.primitives.get(this.modelIndex).scale
           if (
-            JSON.stringify(Viewer.scene.primitives.get(this.modelIndex).color) != JSON.stringify(new Cesium.Color(1, 1, 1, 1)) ||
-            Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount != 0.5 ||
-            Viewer.scene.primitives.get(this.modelIndex).colorBlendMode != 0
+            JSON.stringify(Viewer.scene.primitives.get(this.modelIndex).color) !== JSON.stringify(new Cesium.Color(1, 1, 1, 1)) ||
+            Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount !== 0.5 ||
+            Viewer.scene.primitives.get(this.modelIndex).colorBlendMode !== 0
           ) {
             this.fillColorShow = true
             this.FillColor =
@@ -222,7 +222,7 @@ export default {
               Viewer.scene.primitives.get(this.modelIndex).color.alpha +
               ')'
             this.ColorBlendMode = Viewer.scene.primitives.get(this.modelIndex).colorBlendMode
-            if (Viewer.scene.primitives.get(this.modelIndex).colorBlendMode == 2) {
+            if (Viewer.scene.primitives.get(this.modelIndex).colorBlendMode === 2) {
               this.mixnum = Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount * 100
               this.slider = true
             } else {
@@ -231,7 +231,7 @@ export default {
           } else {
             this.fillColorShow = false
           }
-          if (Viewer.scene.primitives.get(this.modelIndex).silhouetteSize != 0) {
+          if (Viewer.scene.primitives.get(this.modelIndex).silhouetteSize !== 0) {
             this.outLineShow = true
             this.OutlineColor =
               'rgba(' +
@@ -251,7 +251,7 @@ export default {
       }
     },
     left: function(n, o) {
-      let canWidth = Viewer.scene.canvas.width
+      const canWidth = Viewer.scene.canvas.width
       if (n.slice(0, n.length - 2) / canWidth > (canWidth - this.width) / canWidth) {
         this.leftVal = canWidth - this.width
       } else {
@@ -259,8 +259,8 @@ export default {
       }
     },
     top: function(n, o) {
-      let canHeight = Viewer.scene.canvas.height
-      let height = 80 + Number(this.$refs.modelPanel.style.height.slice(0, this.$refs.modelPanel.style.height.length - 2))
+      const canHeight = Viewer.scene.canvas.height
+      const height = 80 + Number(this.$refs.modelPanel.style.height.slice(0, this.$refs.modelPanel.style.height.length - 2))
       if (n.slice(0, n.length - 2) / canHeight > (canHeight - height) / canHeight) {
         this.topVal = canHeight - height
       } else {
@@ -274,7 +274,7 @@ export default {
   methods: {
     index() {},
     init() {
-      //绘制完后把所有选择的属性重置
+      // 绘制完后把所有选择的属性重置
       // Object.assign(this.$data, this.$options.data())
       this.modelIndex = null
       this.zoom = 200
@@ -288,8 +288,8 @@ export default {
       this.slider = false
     },
     define() {
-      //确定按钮
-      let modelData = {
+      // 确定按钮
+      const modelData = {
         id: Viewer.scene.primitives.get(this.modelIndex).id,
         url: Viewer.scene.primitives.get(this.modelIndex).basePath,
         modelMatrix: Viewer.scene.primitives.get(this.modelIndex).modelMatrix.clone(),
@@ -300,34 +300,34 @@ export default {
         silhouetteColor: Viewer.scene.primitives.get(this.modelIndex).silhouetteColor,
         silhouetteSize: Viewer.scene.primitives.get(this.modelIndex).silhouetteSize
       }
-      if (this.pattern == '编辑模型') {
-        for (let i in drawFileData.model) {
-          if (drawFileData.model[i].id == modelData.id) {
-            drawFileData.model[i] = modelData
+      if (this.pattern === '编辑模型') {
+        for (const i in window.drawFileData.model) {
+          if (window.drawFileData.model[i].id === modelData.id) {
+            window.drawFileData.model[i] = modelData
             break
           }
         }
       } else {
-        drawFileData.model.push(modelData)
+        window.drawFileData.model.push(modelData)
       }
       this.modelUrl = null
-      //把数据预存导出文件时用
+      // 把数据预存导出文件时用
       this.init()
       this.$emit('close', false)
       this.$emit('modelPrimitive')
     },
     cancel() {
-      //取消按钮
-      if (this.pattern == '编辑模型') {
-        for (let i in drawFileData.model) {
-          if (drawFileData.model[i].id == this.modelPrimitive) {
-            Viewer.scene.primitives.get(this.modelIndex).modelMatrix = drawFileData.model[i].modelMatrix.clone()
-            Viewer.scene.primitives.get(this.modelIndex).scale = drawFileData.model[i].scale
-            Viewer.scene.primitives.get(this.modelIndex).color = drawFileData.model[i].color
-            Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount = drawFileData.model[i].colorBlendAmount
-            Viewer.scene.primitives.get(this.modelIndex).colorBlendMode = drawFileData.model[i].colorBlendMode
-            Viewer.scene.primitives.get(this.modelIndex).silhouetteColor = drawFileData.model[i].silhouetteColor
-            Viewer.scene.primitives.get(this.modelIndex).silhouetteSize = drawFileData.model[i].silhouetteSize
+      // 取消按钮
+      if (this.pattern === '编辑模型') {
+        for (const i in window.drawFileData.model) {
+          if (window.drawFileData.model[i].id === this.modelPrimitive) {
+            Viewer.scene.primitives.get(this.modelIndex).modelMatrix = window.drawFileData.model[i].modelMatrix.clone()
+            Viewer.scene.primitives.get(this.modelIndex).scale = window.drawFileData.model[i].scale
+            Viewer.scene.primitives.get(this.modelIndex).color = window.drawFileData.model[i].color
+            Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount = window.drawFileData.model[i].colorBlendAmount
+            Viewer.scene.primitives.get(this.modelIndex).colorBlendMode = window.drawFileData.model[i].colorBlendMode
+            Viewer.scene.primitives.get(this.modelIndex).silhouetteColor = window.drawFileData.model[i].silhouetteColor
+            Viewer.scene.primitives.get(this.modelIndex).silhouetteSize = window.drawFileData.model[i].silhouetteSize
           }
         }
       } else {
@@ -342,7 +342,7 @@ export default {
       this.$emit('Select', false)
     },
     zoomTo() {
-      //模型放大缩小
+      // 模型放大缩小
       Viewer.scene.primitives.get(this.modelIndex).scale = this.zoom
     },
     selectModel(e) {
@@ -360,13 +360,13 @@ export default {
       }
     },
     ColorBlendModeChange() {
-      if (this.ColorBlendMode == 0) {
+      if (this.ColorBlendMode === 0) {
         Viewer.scene.primitives.get(this.modelIndex).colorBlendMode = Cesium.ColorBlendMode.HIGHLIGHT
         this.slider = false
-      } else if (this.ColorBlendMode == 1) {
+      } else if (this.ColorBlendMode === 1) {
         Viewer.scene.primitives.get(this.modelIndex).colorBlendMode = Cesium.ColorBlendMode.REPLACE
         this.slider = false
-      } else if (this.ColorBlendMode == 2) {
+      } else if (this.ColorBlendMode === 2) {
         Viewer.scene.primitives.get(this.modelIndex).colorBlendMode = Cesium.ColorBlendMode.MIX
         this.slider = true
       }
@@ -375,7 +375,7 @@ export default {
       Viewer.scene.primitives.get(this.modelIndex).color = this.colorDataChange(color)
     },
     changeMixnum() {
-      if (Viewer.scene.primitives.get(this.modelIndex) != undefined) {
+      if (Viewer.scene.primitives.get(this.modelIndex) !== undefined) {
         Viewer.scene.primitives.get(this.modelIndex).colorBlendAmount = this.mixnum / 100
       }
     },
@@ -395,11 +395,11 @@ export default {
       Viewer.scene.primitives.get(this.modelIndex).silhouetteSize = this.outlineWidth
     },
     colorDataChange(rgb) {
-      //获取到的颜色数据改变格式
+      // 获取到的颜色数据改变格式
       if (rgb != null) {
         this.colorRgbArr = []
-        let arr = rgb.substring(5, rgb.length - 1).split(', ')
-        for (let i in arr) {
+        const arr = rgb.substring(5, rgb.length - 1).split(', ')
+        for (const i in arr) {
           this.colorRgbArr.push(Number(arr[i]))
         }
         return new Cesium.Color(this.colorRgbArr[0] / 255, this.colorRgbArr[1] / 255, this.colorRgbArr[2] / 255, this.colorRgbArr[3])

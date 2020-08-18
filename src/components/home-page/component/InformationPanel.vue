@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-    name: 'informationPanel'
+  name: 'informationPanel'
 }
 </script>
 <style scoped>

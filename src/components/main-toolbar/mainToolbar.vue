@@ -33,7 +33,7 @@ import meshPanel from './../mesh-panel/meshPanel'
 import '../../assets/style/components/mainToolbar.scss'
 import DrawGraph from '../../js/cesiumDraw/DrawGraph.js'
 import { getTownInfo, calulationLineLength, calulationLineRectCenter } from '../../js/common/common.js'
-import { defaultCamera, loadDrillData, loadSectionData, treeStateInfos, modelExplode, resetModelExplode, layerStrip, treeGlobalVariable } from '../../js/common/layerTree'
+import { defaultCamera, loadDrillData, loadSectionData, treeGlobalVariable } from '../../js/common/layerTree'
 export default {
   name: 'main-toolbar',
   props: ['mainToolbarshow'],
@@ -344,7 +344,7 @@ export default {
     bigBang() {
       // let idArray = [1, 2, 3, 4, 5, 6, 7, 8]
       this.num = 0
-      for (let i in Viewer.scene.primitives._primitives) {
+      for (const i in Viewer.scene.primitives._primitives) {
         if (Viewer.scene.primitives._primitives[i].attr !== undefined) {
           const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, 0, -100 * this.num))
           Cesium.Matrix4.multiply(Viewer.scene.primitives._primitives[i].modelMatrix, translation, Viewer.scene.primitives._primitives[i].modelMatrix)

@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-    name:'controlPanel'
+  name: 'controlPanel'
 }
 </script>
 <style scoped>

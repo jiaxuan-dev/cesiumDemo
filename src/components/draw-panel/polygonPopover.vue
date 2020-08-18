@@ -317,21 +317,21 @@ export default {
   watch: {
     polygonShow: function(n, o) {
       this.visible = n
-      if (n && this.pattern == '编辑多边形') {
-        let polygon = Viewer.entities.getById(this.polygonEntity)
-        if (polygon.polygon.heightReference != undefined) {
+      if (n && this.pattern === '编辑多边形') {
+        const polygon = Viewer.entities.getById(this.polygonEntity)
+        if (polygon.polygon.heightReference !== undefined) {
           this.PolygonAttr.ground = polygon.polygon.heightReference._value
-          if (polygon.polygon.heightReference._value == 0) {
+          if (polygon.polygon.heightReference._value === 0) {
             this.heightShow = true
             this.PolygonAttr.polygonHeight = polygon.polygon.height._value
-          } else if (polygon.polygon.heightReference._value == 1) {
+          } else if (polygon.polygon.heightReference._value === 1) {
             this.heightShow = false
-          } else if (polygon.polygon.heightReference._value == 2) {
+          } else if (polygon.polygon.heightReference._value === 2) {
             this.heightShow = true
             this.PolygonAttr.polygonHeight = polygon.polygon.height._value
           }
         }
-        if (polygon.polygon.fill == undefined || polygon.polygon.fill._value) {
+        if (polygon.polygon.fill === undefined || polygon.polygon.fill._value) {
           this.PolygonAttr.fill = true
           if (polygon.polygon.material instanceof Cesium.ColorMaterialProperty) {
             this.PolygonAttr.Material = '纯色'
@@ -413,7 +413,7 @@ export default {
               ', ' +
               polygon.polygon.material.oddColor._value.alpha +
               ')'
-            if (polygon.polygon.material.orientation._value == 0) {
+            if (polygon.polygon.material.orientation._value === 0) {
               this.PolygonAttr.stripeOrientation = '横向'
             } else {
               this.PolygonAttr.stripeOrientation = '纵向'
@@ -453,13 +453,13 @@ export default {
         } else {
           this.PolygonAttr.fill = false
         }
-        if (polygon.polygon.outline == undefined || !polygon.polygon.outline._value) {
+        if (polygon.polygon.outline === undefined || !polygon.polygon.outline._value) {
           this.outlineAttr = false
           this.PolygonAttr.outline = false
         } else {
           this.PolygonAttr.outline = true
           this.outlineAttr = true
-          if (polygon.polygon.outlineColor == undefined) {
+          if (polygon.polygon.outlineColor === undefined) {
             this.PolygonAttr.OutLineColor = 'rgba(0, 0, 0, 1)'
           } else {
             this.PolygonAttr.OutLineColor =
@@ -477,7 +477,7 @@ export default {
       }
     },
     left: function(n, o) {
-      let canWidth = Viewer.scene.canvas.width
+      const canWidth = Viewer.scene.canvas.width
       if (n.slice(0, n.length - 2) / canWidth > (canWidth - this.width) / canWidth) {
         this.leftVal = canWidth - this.width
       } else {
@@ -485,8 +485,8 @@ export default {
       }
     },
     top: function(n, o) {
-      let canHeight = Viewer.scene.canvas.height
-      let height = 80 + Number(this.$refs.polygonPanel.style.height.slice(0, this.$refs.polygonPanel.style.height.length - 2))
+      const canHeight = Viewer.scene.canvas.height
+      const height = 80 + Number(this.$refs.polygonPanel.style.height.slice(0, this.$refs.polygonPanel.style.height.length - 2))
       if (n.slice(0, n.length - 2) / canHeight > (canHeight - height) / canHeight) {
         this.topVal = canHeight - height
       } else {
@@ -496,20 +496,20 @@ export default {
   },
   methods: {
     init() {
-      //绘制完后把所有选择的属性重置
+      // 绘制完后把所有选择的属性重置
       Object.assign(this.$data, this.$options.data())
     },
     define() {
-      //确定按钮
-      let polygonAttr = Viewer.entities.getById(this.polygonEntity).polygon
-      let polygonData = {
+      // 确定按钮
+      const polygonAttr = Viewer.entities.getById(this.polygonEntity).polygon
+      const polygonData = {
         id: this.polygonEntity,
         ground: this.PolygonAttr.ground,
         outline: this.PolygonAttr.outline,
         fill: this.PolygonAttr.fill,
         position: polygonAttr.hierarchy._value.positions
       }
-      if (this.PolygonAttr.ground != 1) {
+      if (this.PolygonAttr.ground !== 1) {
         polygonData.height = this.PolygonAttr.polygonHeight
       }
       if (this.PolygonAttr.outline) {
@@ -518,86 +518,86 @@ export default {
       if (this.PolygonAttr.fill) {
         polygonData.Material = this.PolygonAttr.Material
       }
-      if (this.PolygonAttr.Material == '纯色') {
+      if (this.PolygonAttr.Material === '纯色') {
         polygonData.FillColor = this.PolygonAttr.FillColor
-      } else if (this.PolygonAttr.Material == '图片') {
+      } else if (this.PolygonAttr.Material === '图片') {
         polygonData.image = polygonAttr.material.image._value
         polygonData.imageNum = polygonAttr.material.repeat._value
-      } else if (this.PolygonAttr.Material == '网格') {
+      } else if (this.PolygonAttr.Material === '网格') {
         polygonData.FillColor = this.PolygonAttr.FillColor
         polygonData.gridNum = polygonAttr.material.lineCount._value
         polygonData.gridLineWidth = polygonAttr.material.lineThickness._value
         polygonData.gridAlpha = polygonAttr.material.cellAlpha._value
-      } else if (this.PolygonAttr.Material == '条纹') {
+      } else if (this.PolygonAttr.Material === '条纹') {
         polygonData.EvenColor = this.PolygonAttr.EvenColor
         polygonData.OddColor = this.PolygonAttr.OddColor
         polygonData.orientation = polygonAttr.material.orientation._value
         polygonData.stripeNum = polygonAttr.material.repeat._value
-      } else if (this.PolygonAttr.Material == '棋盘') {
+      } else if (this.PolygonAttr.Material === '棋盘') {
         polygonData.EvenColor = this.PolygonAttr.EvenColor
         polygonData.OddColor = this.PolygonAttr.OddColor
         polygonData.checkerboardNum = polygonAttr.material.repeat._value
       }
-      if (this.pattern == '编辑多边形') {
-        for (let i in drawFileData.polygon) {
-          if ((drawFileData.polygon[i].id = polygonData.id)) {
-            drawFileData.polygon[i] = polygonData
+      if (this.pattern === '编辑多边形') {
+        for (const i in window.drawFileData.polygon) {
+          if ((window.drawFileData.polygon[i].id = polygonData.id)) {
+            window.drawFileData.polygon[i] = polygonData
             break
           }
         }
       } else {
-        drawFileData.polygon.push(polygonData)
+        window.drawFileData.polygon.push(polygonData)
       }
-      //数据预存
+      // 数据预存
       this.$emit('define', false)
       this.init()
     },
     cancel() {
-      //取消按钮
+      // 取消按钮
       this.$emit('cancel', false)
-      if (this.pattern == '编辑多边形') {
-        for (let i in drawFileData.polygon) {
-          if ((drawFileData.polygon[i].id = this.polygonEntity)) {
-            Viewer.entities.getById(this.polygonEntity).polygon.hierarchy = new Cesium.PolygonHierarchy(drawFileData.polygon[i].position)
-            Viewer.entities.getById(this.polygonEntity).polygon.heightReference = drawFileData.polygon[i].ground
-            Viewer.entities.getById(this.polygonEntity).polygon.fill = drawFileData.polygon[i].fill
-            Viewer.entities.getById(this.polygonEntity).polygon.outline = drawFileData.polygon[i].outline
-            if (drawFileData.polygon[i].fill) {
-              if (drawFileData.polygon[i].Material == '纯色') {
-                Viewer.entities.getById(this.polygonEntity).polygon.material = this.colorDataChange(drawFileData.polygon[i].FillColor)
-              } else if (drawFileData.polygon[i].Material == '图片') {
+      if (this.pattern === '编辑多边形') {
+        for (const i in window.drawFileData.polygon) {
+          if ((window.drawFileData.polygon[i].id = this.polygonEntity)) {
+            Viewer.entities.getById(this.polygonEntity).polygon.hierarchy = new Cesium.PolygonHierarchy(window.drawFileData.polygon[i].position)
+            Viewer.entities.getById(this.polygonEntity).polygon.heightReference = window.drawFileData.polygon[i].ground
+            Viewer.entities.getById(this.polygonEntity).polygon.fill = window.drawFileData.polygon[i].fill
+            Viewer.entities.getById(this.polygonEntity).polygon.outline = window.drawFileData.polygon[i].outline
+            if (window.drawFileData.polygon[i].fill) {
+              if (window.drawFileData.polygon[i].Material === '纯色') {
+                Viewer.entities.getById(this.polygonEntity).polygon.material = this.colorDataChange(window.drawFileData.polygon[i].FillColor)
+              } else if (window.drawFileData.polygon[i].Material === '图片') {
                 Viewer.entities.getById(this.polygonEntity).polygon.material = new Cesium.ImageMaterialProperty({
-                  image: drawFileData.polygon[i].image,
-                  repeat: drawFileData.polygon[i].imageNum,
+                  image: window.drawFileData.polygon[i].image,
+                  repeat: window.drawFileData.polygon[i].imageNum,
                   transparent: true
                 })
-              } else if (drawFileData.polygon[i].Material == '网格') {
+              } else if (window.drawFileData.polygon[i].Material === '网格') {
                 Viewer.entities.getById(this.polygonEntity).polygon.material = new Cesium.GridMaterialProperty({
-                  color: this.colorDataChange(drawFileData.polygon[i].FillColor),
-                  cellAlpha: drawFileData.polygon[i].gridAlpha,
-                  lineCount: drawFileData.polygon[i].gridNum,
-                  lineThickness: drawFileData.polygon[i].gridLineWidth
+                  color: this.colorDataChange(window.drawFileData.polygon[i].FillColor),
+                  cellAlpha: window.drawFileData.polygon[i].gridAlpha,
+                  lineCount: window.drawFileData.polygon[i].gridNum,
+                  lineThickness: window.drawFileData.polygon[i].gridLineWidth
                 })
-              } else if (drawFileData.polygon[i].Material == '条纹') {
+              } else if (window.drawFileData.polygon[i].Material === '条纹') {
                 Viewer.entities.getById(this.polygonEntity).polygon.material = new Cesium.StripeMaterialProperty({
-                  evenColor: this.colorDataChange(drawFileData.polygon[i].EvenColor),
-                  oddColor: this.colorDataChange(drawFileData.polygon[i].OddColor),
-                  repeat: drawFileData.polygon[i].stripeNum,
-                  orientation: drawFileData.polygon[i].orientation
+                  evenColor: this.colorDataChange(window.drawFileData.polygon[i].EvenColor),
+                  oddColor: this.colorDataChange(window.drawFileData.polygon[i].OddColor),
+                  repeat: window.drawFileData.polygon[i].stripeNum,
+                  orientation: window.drawFileData.polygon[i].orientation
                 })
-              } else if (drawFileData.polygon[i].Material == '棋盘') {
+              } else if (window.drawFileData.polygon[i].Material === '棋盘') {
                 Viewer.entities.getById(this.polygonEntity).polygon.material = new Cesium.CheckerboardMaterialProperty({
-                  evenColor: this.colorDataChange(drawFileData.polygon[i].EvenColor),
-                  oddColor: this.colorDataChange(drawFileData.polygon[i].OddColor),
-                  repeat: drawFileData.polygon[i].checkerboardNum
+                  evenColor: this.colorDataChange(window.drawFileData.polygon[i].EvenColor),
+                  oddColor: this.colorDataChange(window.drawFileData.polygon[i].OddColor),
+                  repeat: window.drawFileData.polygon[i].checkerboardNum
                 })
               }
             }
-            if (drawFileData.polygon[i].outline) {
-              Viewer.entities.getById(this.polygonEntity).polygon.outlineColor = this.colorDataChange(drawFileData.polygon[i].OutLineColor)
+            if (window.drawFileData.polygon[i].outline) {
+              Viewer.entities.getById(this.polygonEntity).polygon.outlineColor = this.colorDataChange(window.drawFileData.polygon[i].OutLineColor)
             }
-            if (drawFileData.polygon[i].ground != 1) {
-              Viewer.entities.getById(this.polygonEntity).polygon.height = drawFileData.polygon[i].height
+            if (window.drawFileData.polygon[i].ground !== 1) {
+              Viewer.entities.getById(this.polygonEntity).polygon.height = window.drawFileData.polygon[i].height
             }
           }
         }
@@ -607,11 +607,11 @@ export default {
       this.init()
     },
     colorDataChange(rgb) {
-      //获取到的颜色数据改变格式
+      // 获取到的颜色数据改变格式
       if (rgb != null) {
         this.colorRgbArr = []
-        let arr = rgb.substring(5, rgb.length - 1).split(', ')
-        for (let i in arr) {
+        const arr = rgb.substring(5, rgb.length - 1).split(', ')
+        for (const i in arr) {
           this.colorRgbArr.push(Number(arr[i]))
         }
         return new Cesium.Color(this.colorRgbArr[0] / 255, this.colorRgbArr[1] / 255, this.colorRgbArr[2] / 255, this.colorRgbArr[3])
@@ -620,15 +620,15 @@ export default {
       }
     },
     polygonHeight() {
-      //不贴地情况下的高度
-      if (this.PolygonAttr.ground == 0 || this.PolygonAttr.ground == 2) {
+      // 不贴地情况下的高度
+      if (this.PolygonAttr.ground === 0 || this.PolygonAttr.ground === 2) {
         Viewer.entities.getById(this.polygonEntity).polygon.height = Number(this.PolygonAttr.polygonHeight)
       }
     },
     ground() {
-      //多边形的模式
+      // 多边形的模式
       Viewer.entities.getById(this.polygonEntity).polygon.heightReference = this.PolygonAttr.ground
-      if (this.PolygonAttr.ground == 1) {
+      if (this.PolygonAttr.ground === 1) {
         this.heightShow = false
         Viewer.entities.getById(this.polygonEntity).polygon.height = undefined
         this.PolygonAttr.outline = false
@@ -638,12 +638,12 @@ export default {
         this.fillBe = true
         Viewer.entities.getById(this.polygonEntity).polygon.fill = true
         this.outlineAttr = false
-      } else if (this.PolygonAttr.ground == 0) {
+      } else if (this.PolygonAttr.ground === 0) {
         this.heightShow = true
         Viewer.entities.getById(this.polygonEntity).polygon.height = this.PolygonAttr.polygonHeight
         this.outlineBe = false
         this.fillBe = false
-      } else if (this.PolygonAttr.ground == 2) {
+      } else if (this.PolygonAttr.ground === 2) {
         this.heightShow = true
         Viewer.entities.getById(this.polygonEntity).polygon.height = this.PolygonAttr.polygonHeight
         this.outlineBe = false
@@ -651,7 +651,7 @@ export default {
       }
     },
     outline() {
-      //是否有外边线轮廓
+      // 是否有外边线轮廓
       if (!this.PolygonAttr.outline && !this.PolygonAttr.fill) {
         Viewer.entities.getById(this.polygonEntity).polygon.outline = this.PolygonAttr.outline
         Viewer.entities.getById(this.polygonEntity).polygon.fill = true
@@ -662,7 +662,7 @@ export default {
       this.outlineAttr = this.PolygonAttr.outline
     },
     fill() {
-      //是否有填充
+      // 是否有填充
       if (!this.PolygonAttr.outline && !this.PolygonAttr.fill) {
         Viewer.entities.getById(this.polygonEntity).polygon.fill = this.PolygonAttr.fill
         Viewer.entities.getById(this.polygonEntity).polygon.outline = true
@@ -673,12 +673,12 @@ export default {
       this.outlineAttr = this.PolygonAttr.outline
     },
     changeOutLineColor(color) {
-      //改变轮廓的颜色
+      // 改变轮廓的颜色
       Viewer.entities.getById(this.polygonEntity).polygon.outlineColor = this.colorDataChange(color)
     },
     SetMaterials() {
-      //使用什么材质
-      if (this.PolygonAttr.Material == '纯色') {
+      // 使用什么材质
+      if (this.PolygonAttr.Material === '纯色') {
         this.stripeShow = false
         this.oddEven = false
         this.gridShow = false
@@ -686,7 +686,7 @@ export default {
         this.imageShow = false
         this.checkerboardShow = false
         Viewer.entities.getById(this.polygonEntity).polygon.material = this.colorDataChange(this.PolygonAttr.FillColor)
-      } else if (this.PolygonAttr.Material == '图片') {
+      } else if (this.PolygonAttr.Material === '图片') {
         this.stripeShow = false
         this.oddEven = false
         this.gridShow = false
@@ -698,7 +698,7 @@ export default {
           repeat: new Cesium.Cartesian2(this.PolygonAttr.imageRepeatH, this.PolygonAttr.imageRepeatV),
           transparent: true
         })
-      } else if (this.PolygonAttr.Material == '网格') {
+      } else if (this.PolygonAttr.Material === '网格') {
         this.stripeShow = false
         this.oddEven = false
         this.gridShow = true
@@ -711,7 +711,7 @@ export default {
           lineCount: new Cesium.Cartesian2(this.PolygonAttr.gridLineNumN, this.PolygonAttr.gridLineNumV),
           lineThickness: new Cesium.Cartesian2(this.PolygonAttr.gridLineWidthN, this.PolygonAttr.gridLineWidthV)
         })
-      } else if (this.PolygonAttr.Material == '条纹') {
+      } else if (this.PolygonAttr.Material === '条纹') {
         this.stripeShow = true
         this.oddEven = true
         this.gridShow = false
@@ -719,7 +719,7 @@ export default {
         this.imageShow = false
         this.checkerboardShow = false
         let StripeOrientation = null
-        if (this.PolygonAttr.stripeOrientation == '横向') {
+        if (this.PolygonAttr.stripeOrientation === '横向') {
           StripeOrientation = Cesium.StripeOrientation.HORIZONTAL
         } else {
           StripeOrientation = Cesium.StripeOrientation.VERTICAL
@@ -730,7 +730,7 @@ export default {
           repeat: this.PolygonAttr.stripeNum,
           orientation: StripeOrientation
         })
-      } else if (this.PolygonAttr.Material == '棋盘') {
+      } else if (this.PolygonAttr.Material === '棋盘') {
         this.stripeShow = false
         this.oddEven = true
         this.gridShow = false
@@ -745,10 +745,10 @@ export default {
       }
     },
     changeFillColor(color) {
-      //网格和纯色材质时改变填充颜色
-      if (this.PolygonAttr.Material == '纯色') {
+      // 网格和纯色材质时改变填充颜色
+      if (this.PolygonAttr.Material === '纯色') {
         Viewer.entities.getById(this.polygonEntity).polygon.material = this.colorDataChange(color)
-      } else if (this.PolygonAttr.Material == '网格') {
+      } else if (this.PolygonAttr.Material === '网格') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.color = this.colorDataChange(color)
       }
     },
@@ -756,14 +756,14 @@ export default {
       this.$refs.polygonImage.click()
     },
     selectImage(event) {
-      //图片材质时选择图片
-      let that = this
-      let reader = new FileReader()
-      let file = event.target.files[0]
+      // 图片材质时选择图片
+      const that = this
+      const reader = new FileReader()
+      const file = event.target.files[0]
       reader.readAsDataURL(file)
       reader.onload = function() {
         that.PolygonAttr.imgUrl = reader.result
-        if (that.PolygonAttr.Material == '图片') {
+        if (that.PolygonAttr.Material === '图片') {
           Viewer.entities.getById(that.polygonEntity).polygon.material = new Cesium.ImageMaterialProperty({
             image: reader.result,
             repeat: new Cesium.Cartesian2(that.PolygonAttr.imageRepeatH, that.PolygonAttr.imageRepeatV),
@@ -773,13 +773,13 @@ export default {
       }
     },
     imageRepeat() {
-      //图片材质时图片的数量
-      if (this.PolygonAttr.Material == '图片') {
+      // 图片材质时图片的数量
+      if (this.PolygonAttr.Material === '图片') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.repeat = new Cesium.Cartesian2(this.PolygonAttr.imageRepeatH, this.PolygonAttr.imageRepeatV)
       }
     },
     polygonImage() {
-      if (this.PolygonAttr.Material == '图片') {
+      if (this.PolygonAttr.Material === '图片') {
         Viewer.entities.getById(this.polygonEntity).polygon.material = new Cesium.ImageMaterialProperty({
           image: this.PolygonAttr.img,
           repeat: new Cesium.Cartesian2(this.PolygonAttr.imageRepeatH, this.PolygonAttr.imageRepeatV),
@@ -788,39 +788,39 @@ export default {
       }
     },
     gridLineNum() {
-      //网格材质时网格线的数量
-      if (this.PolygonAttr.Material == '网格') {
+      // 网格材质时网格线的数量
+      if (this.PolygonAttr.Material === '网格') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.lineCount = new Cesium.Cartesian2(this.PolygonAttr.gridLineNumN, this.PolygonAttr.gridLineNumV)
       }
     },
     gridLineWidth() {
-      //网格材质时网格线的宽度
-      if (this.PolygonAttr.Material == '网格') {
+      // 网格材质时网格线的宽度
+      if (this.PolygonAttr.Material === '网格') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.lineThickness = new Cesium.Cartesian2(this.PolygonAttr.gridLineWidthN, this.PolygonAttr.gridLineWidthV)
       }
     },
     gridAlpha() {
-      //网格材质时格子的透明度
-      if (this.PolygonAttr.Material == '网格') {
+      // 网格材质时格子的透明度
+      if (this.PolygonAttr.Material === '网格') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.cellAlpha = this.PolygonAttr.gridAlpha
       }
     },
     changeEvenColor(color) {
-      //棋盘或者条纹材质时调整第一种颜色
-      if (this.PolygonAttr.Material == '棋盘' || this.PolygonAttr.Material == '条纹') {
+      // 棋盘或者条纹材质时调整第一种颜色
+      if (this.PolygonAttr.Material === '棋盘' || this.PolygonAttr.Material === '条纹') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.evenColor = this.colorDataChange(color)
       }
     },
     changeOddColor(color) {
-      //棋盘或者条纹材质时调整第二种颜色
-      if (this.PolygonAttr.Material == '棋盘' || this.PolygonAttr.Material == '条纹') {
+      // 棋盘或者条纹材质时调整第二种颜色
+      if (this.PolygonAttr.Material === '棋盘' || this.PolygonAttr.Material === '条纹') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.oddColor = this.colorDataChange(color)
       }
     },
     stripeOrientation() {
-      //条纹材质时调整条纹的方向
-      if (this.PolygonAttr.Material == '条纹') {
-        if (this.PolygonAttr.stripeOrientation == '横向') {
+      // 条纹材质时调整条纹的方向
+      if (this.PolygonAttr.Material === '条纹') {
+        if (this.PolygonAttr.stripeOrientation === '横向') {
           Viewer.entities.getById(this.polygonEntity).polygon.material.orientation = Cesium.StripeOrientation.HORIZONTAL
         } else {
           Viewer.entities.getById(this.polygonEntity).polygon.material.orientation = Cesium.StripeOrientation.VERTICAL
@@ -828,14 +828,14 @@ export default {
       }
     },
     stripeNum() {
-      //条纹材质时调整条纹的数量
-      if (this.PolygonAttr.Material == '条纹') {
+      // 条纹材质时调整条纹的数量
+      if (this.PolygonAttr.Material === '条纹') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.repeat = this.PolygonAttr.stripeNum
       }
     },
     checkerboardNum() {
-      //棋盘材质时调整棋盘格子的个数
-      if (this.PolygonAttr.Material == '棋盘') {
+      // 棋盘材质时调整棋盘格子的个数
+      if (this.PolygonAttr.Material === '棋盘') {
         Viewer.entities.getById(this.polygonEntity).polygon.material.repeat = new Cesium.Cartesian2(this.PolygonAttr.checkerboardNumN, this.PolygonAttr.checkerboardNumV)
       }
     }

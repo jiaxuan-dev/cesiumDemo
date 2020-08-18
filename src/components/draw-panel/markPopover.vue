@@ -126,17 +126,17 @@ export default {
   watch: {
     markShow: function(n, o) {
       this.visible = n
-      if (n && this.pattern == '编辑标注') {
-        let marker = Viewer.entities.getById(this.markEntity)
-        this.markWidth = marker.billboard.width == undefined ? 32 : marker.billboard.width._value
-        this.markHeight = marker.billboard.height == undefined ? 32 : marker.billboard.height._value
+      if (n && this.pattern === '编辑标注') {
+        const marker = Viewer.entities.getById(this.markEntity)
+        this.markWidth = marker.billboard.width === undefined ? 32 : marker.billboard.width._value
+        this.markHeight = marker.billboard.height === undefined ? 32 : marker.billboard.height._value
         this.name = marker.label.text._value
         this.fontsize = marker.label.font._value.split('px')[0]
         this.color = 'rgba(' + marker.label.fillColor._value.red * 255 + ', ' + marker.label.fillColor._value.green * 255 + ', ' + marker.label.fillColor._value.blue * 255 + ', 1)'
       }
     },
     left: function(n, o) {
-      let canWidth = Viewer.scene.canvas.width
+      const canWidth = Viewer.scene.canvas.width
       if (n.slice(0, n.length - 2) / canWidth > (canWidth - this.width) / canWidth) {
         this.leftVal = canWidth - this.width
       } else {
@@ -144,8 +144,8 @@ export default {
       }
     },
     top: function(n, o) {
-      let canHeight = Viewer.scene.canvas.height
-      let height = 80 + Number(this.$refs.markPanel.style.height.slice(0, this.$refs.markPanel.style.height.length - 2))
+      const canHeight = Viewer.scene.canvas.height
+      const height = 80 + Number(this.$refs.markPanel.style.height.slice(0, this.$refs.markPanel.style.height.length - 2))
       if (n.slice(0, n.length - 2) / canHeight > (canHeight - height) / canHeight) {
         this.topVal = canHeight - height
       } else {
@@ -155,12 +155,12 @@ export default {
   },
   methods: {
     init() {
-      //绘制完后把所有选择的属性重置
+      // 绘制完后把所有选择的属性重置
       Object.assign(this.$data, this.$options.data())
     },
     define() {
-      //确定按钮
-      let markerData = {
+      // 确定按钮
+      const markerData = {
         id: this.markEntity,
         position: Viewer.entities.getById(this.markEntity).position._value.clone(),
         image: Viewer.entities.getById(this.markEntity).billboard.image._value,
@@ -170,33 +170,33 @@ export default {
         color: this.color,
         fontSize: this.fontsize
       }
-      if (this.pattern == '编辑标注') {
-        for (let i in drawFileData.marker) {
-          if (drawFileData.marker[i].id == markerData.id) {
-            drawFileData.marker[i] = markerData
+      if (this.pattern === '编辑标注') {
+        for (const i in window.drawFileData.marker) {
+          if (window.drawFileData.marker[i].id === markerData.id) {
+            window.drawFileData.marker[i] = markerData
             break
           }
         }
       } else {
-        drawFileData.marker.push(markerData)
+        window.drawFileData.marker.push(markerData)
       }
-      //数据预存
+      // 数据预存
       this.$emit('define', false)
       this.init()
     },
     cancel() {
-      //取消按钮
+      // 取消按钮
       this.$emit('cancel', false)
-      if (this.pattern == '编辑标注') {
-        for (let i in drawFileData.marker) {
-          if (drawFileData.marker[i].id == this.markEntity) {
-            Viewer.entities.getById(this.markEntity).billboard.position = drawFileData.marker[i].position.clone()
-            Viewer.entities.getById(this.markEntity).billboard.image = drawFileData.marker[i].image
-            Viewer.entities.getById(this.markEntity).billboard.width = drawFileData.marker[i].markWidth
-            Viewer.entities.getById(this.markEntity).billboard.height = drawFileData.marker[i].markHeight
-            Viewer.entities.getById(this.markEntity).label.text = drawFileData.marker[i].name
-            Viewer.entities.getById(this.markEntity).label.fillColor = this.colorDataChange(drawFileData.marker[i].color)
-            Viewer.entities.getById(this.markEntity).label.font = drawFileData.marker[i].fontSize + 'px sans-serif'
+      if (this.pattern === '编辑标注') {
+        for (const i in window.drawFileData.marker) {
+          if (window.drawFileData.marker[i].id === this.markEntity) {
+            Viewer.entities.getById(this.markEntity).billboard.position = window.drawFileData.marker[i].position.clone()
+            Viewer.entities.getById(this.markEntity).billboard.image = window.drawFileData.marker[i].image
+            Viewer.entities.getById(this.markEntity).billboard.width = window.drawFileData.marker[i].markWidth
+            Viewer.entities.getById(this.markEntity).billboard.height = window.drawFileData.marker[i].markHeight
+            Viewer.entities.getById(this.markEntity).label.text = window.drawFileData.marker[i].name
+            Viewer.entities.getById(this.markEntity).label.fillColor = this.colorDataChange(window.drawFileData.marker[i].color)
+            Viewer.entities.getById(this.markEntity).label.font = window.drawFileData.marker[i].fontSize + 'px sans-serif'
           }
         }
       } else {
@@ -205,11 +205,11 @@ export default {
       this.init()
     },
     colorDataChange(rgb) {
-      //获取到的颜色数据改变格式
+      // 获取到的颜色数据改变格式
       if (rgb != null) {
         this.colorRgbArr = []
-        let arr = rgb.substring(5, rgb.length - 1).split(', ')
-        for (let i in arr) {
+        const arr = rgb.substring(5, rgb.length - 1).split(', ')
+        for (const i in arr) {
           this.colorRgbArr.push(Number(arr[i]))
         }
         return new Cesium.Color(this.colorRgbArr[0] / 255, this.colorRgbArr[1] / 255, this.colorRgbArr[2] / 255, this.colorRgbArr[3])
@@ -225,13 +225,13 @@ export default {
       Viewer.entities.getById(this.markEntity).billboard.image = e.target.src
     },
     selectImage(event) {
-      let that = this
-      let reader = new FileReader()
-      let file = event.target.files[0]
+      const that = this
+      const reader = new FileReader()
+      const file = event.target.files[0]
       reader.readAsDataURL(file)
       reader.onload = function() {
         Viewer.entities.getById(that.markEntity).billboard.image = reader.result
-        let img = new Image()
+        const img = new Image()
         img.src = reader.result
         img.onload = function() {
           that.markWidth = img.width
