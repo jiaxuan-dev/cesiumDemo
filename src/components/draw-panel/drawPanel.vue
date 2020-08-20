@@ -256,7 +256,9 @@ export default {
           //   let pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y)
           //   cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene)
           // }
-          that.label.position = cartesian
+          if (cartesian !== undefined) {
+            that.label.position = cartesian
+          }
         }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
       } else {
         this.$message({

@@ -7,7 +7,14 @@
  * @LastEditTime: 2020-07-24 15:09:01
 -->
 <template>
-  <dialogPage :title="title" width="400" left="500" top="120" :dialogShow="visible" @close="setVisible">
+  <dialogPage
+    :title="title"
+    width="400"
+    left="500"
+    top="120"
+    :dialogShow="visible"
+    @close="setVisible"
+  >
     <div class="result-box">
       <el-form ref="form" label-width="90px" label-position="left">
         <el-form-item label="隧道宽度(m)">
@@ -22,8 +29,12 @@
         <el-form-item>
           <el-button @click="drawLine">绘制线</el-button>
           <el-button @click="digHole">开挖分析</el-button>
-          <el-button v-if="!isRoaming" title="继续漫游" @click="pauseOrContinue(true)"><i class="el-icon-video-play"></i></el-button>
-          <el-button v-if="isRoaming" title="暂停漫游" @click="pauseOrContinue(false)"><i class="el-icon-video-pause"></i></el-button>
+          <el-button v-if="!isRoaming" title="继续漫游" @click="pauseOrContinue(true)">
+            <i class="el-icon-video-play"></i>
+          </el-button>
+          <el-button v-if="isRoaming" title="暂停漫游" @click="pauseOrContinue(false)">
+            <i class="el-icon-video-pause"></i>
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -53,6 +64,15 @@ export default {
     }
   },
   methods: {
+    removeall() {
+      if (this.roaming !== undefined) {
+        this.roaming.EndRoaming()
+        this.roaming = undefined
+        if (this.timer !== undefined) {
+          clearInterval(this.timer)
+        }
+      }
+    },
     setVisible(bool) {
       this.visible = bool
     },

@@ -149,7 +149,7 @@ module.exports = {
         splitChunks: {
           maxInitialRequests: Infinity,
           minSize: 0,
-          maxSize: 250000,
+          maxSize: 250000000,
           cacheGroups: {
             vendor: {
               test: /[\\/]node_modules[\\/]/,

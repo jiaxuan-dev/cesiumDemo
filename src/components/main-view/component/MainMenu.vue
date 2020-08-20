@@ -27,7 +27,12 @@
         <!--<span class="titleCenter">显示</span>
         <img src="../images/earth.gif" />-->
         <div class="homeBtn">
-          <img src="../images/search.png" class="searchBtn" title="查询" @click="query" />
+          <img
+            :src="queryState?require('../images/search.png'):require('../images/unsearch.png')"
+            class="searchBtn"
+            title="查询"
+            @click="query"
+          />
           <img src="../images/home.png" class="homeButton" title="主页" @click="homeBtn" />
           <img src="../images/clear.png" class="clearBtn" title="清除" @click="clearMap" />
         </div>
@@ -45,7 +50,15 @@
           <!--列表部分结束-->
         </div>
       </div>
-      <dialogPage :width="200" :left="dialogLeft" :top="dialogTop" height="150" :dialogShow="dialogShow" @close="closePanel" :markShow="dialogPosition">
+      <dialogPage
+        :width="200"
+        :left="dialogLeft"
+        :top="dialogTop"
+        :height="dialogHeight"
+        :dialogShow="dialogShow"
+        @close="closePanel"
+        :markShow="dialogPosition"
+      >
         <div>
           <div class="cotant">
             <!-- <div>地层编号：{{ pro }}</div>
@@ -117,36 +130,38 @@ export default {
       specialSubjectShow: false,
       staisticsChartsShow: false,
       dialogShow: false,
+      dialogHeight: 150,
       dialogPosition: false, // 三角的位置
       seachPoint: null, // query查询点
       dialogLeft: 0,
       dialogTop: 0,
       pro: '',
-      des: ''
+      des: '',
+      queryState: false
     }
   },
   computed: {
     queryShow: {
-      get: function() {
+      get: function () {
         return this.$store.state.query.queryShow
       },
-      set: function(value) {
+      set: function (value) {
         this.$store.commit('query/setQueryShow', value)
       }
     },
     showResult: {
-      get: function() {
+      get: function () {
         return this.$store.state.query.showResult
       },
-      set: function(value) {
+      set: function (value) {
         this.$store.commit('query/setShowResult', value)
       }
     },
     singleLayer: {
-      get: function() {
+      get: function () {
         return this.$store.state.query.singleLayer
       },
-      set: function(value) {
+      set: function (value) {
         this.$store.commit('query/setSingleLayer', value)
       }
     }
@@ -175,6 +190,7 @@ export default {
       this.$refs.drawPanel.parentHandle()
       this.$refs.flyRoaming.parentHandle()
       this.$refs.mainToolbar.parentHandle()
+      this.dialogShow = false
     },
     exit() {
       this.$refs.dropConent.style.display = 'none'
@@ -192,16 +208,17 @@ export default {
       this.$refs.dropDown.style.top = '52px'
       var positionMenu = (document.body.clientWidth - 170) / 2 + 85 + 75 + 30
       var menuWidth = that.$refs.buttonList.clientWidth * 0.2
-      that.$refs.buttonList.children.forEach(element => {
+      that.$refs.buttonList.children.forEach((element) => {
         element.style.color = 'white'
       })
-      setTimeout(function() {
+      setTimeout(function () {
         var height = 0
         var width = 0
         that.init()
         if (text !== '查询' && that.handler !== undefined) {
           that.handler.destroy()
         }
+        that.$refs.dropDown.style.width = 'auto'
         if (text === '标绘') {
           that.drawShow = true
           width = positionMenu + menuWidth + menuWidth / 2 - 65 + 'px'
@@ -226,7 +243,8 @@ export default {
           that.staisticsChartsShow = true
           width = positionMenu + menuWidth * 3 + menuWidth / 2 - 65 + 'px'
           that.$refs.buttonList.children[3].style.color = '#02182e'
-          height = '223px'
+          that.$refs.dropDown.style.width = '135px'
+          height = '180px'
         }
         that.$refs.dropDown.style.height = height
         that.$refs.dropDown.style.left = width
@@ -247,13 +265,17 @@ export default {
     },
     query(e) {
       // if (!this.queryActive) // this.move('查询', e)
+      this.queryState = !this.queryState
       const that = this
       this.queryActive = !this.queryActive
+      if (!this.queryState) {
+        this.dialogShow = false
+      }
       if (this.queryActive) {
         if (this.handler) this.handler.destroy()
         this.handler = new Cesium.ScreenSpaceEventHandler(Viewer.canvas)
 
-        this.handler.setInputAction(function(movement) {
+        this.handler.setInputAction(function (movement) {
           const feature = Viewer.scene.pick(movement.position)
           if (!Cesium.defined(feature)) {
             return
@@ -276,18 +298,23 @@ export default {
           that.seachPoint = window.Viewer.scene.globe.pick(window.Viewer.camera.getPickRay(cartesinPoint), window.Viewer.scene)
           that.dialogLeft = movement.position.x - 100
           that.dialogTop = movement.position.y - 150
+          if (that.showResult) {
+            that.dialogHeight = 326
+            that.queryDialogPosition(parseInt(movement.position.y), parseInt(movement.position.x), that.dialogHeight)
+          }
           // 每一帧渲染结束后，对位置进行更新
-          window.Viewer.scene.postRender.addEventListener(function() {
+          window.Viewer.scene.postRender.addEventListener(function () {
             var point = Cesium.SceneTransforms.wgs84ToWindowCoordinates(window.Viewer.scene, that.seachPoint)
             if (point) {
-              that.dialogLeft = parseInt(point.x) - 100
-              that.dialogTop = parseInt(point.y) - 150
-              that.queryDialogPosition(that.dialogTop, that.dialogLeft)
+              that.dialogLeft = parseInt(point.x)
+              that.dialogTop = parseInt(point.y)
+
+              that.queryDialogPosition(parseInt(point.y), parseInt(point.x), that.dialogHeight)
             }
           })
           switch (queryObj.type) {
             case 1: // 钻孔
-              that.showResult = that.$refs.mainToolbar.drillResults.find(m => m.uuid === queryObj.parentuuid)
+              that.showResult = that.$refs.mainToolbar.drillResults.find((m) => m.uuid === queryObj.parentuuid)
               that.singleLayer = [
                 { name: '层名', value: queryObj.name },
                 { name: '长度(m)', value: queryObj.length.toFixed(2) }
@@ -295,7 +322,7 @@ export default {
 
               break
             case 2: // 剖面
-              that.showResult = that.$refs.mainToolbar.sectionResults.find(m => m.uuid === queryObj.parentuuid)
+              that.showResult = that.$refs.mainToolbar.sectionResults.find((m) => m.uuid === queryObj.parentuuid)
               that.singleLayer = [
                 { name: '层名', value: queryObj.name },
                 { name: '深度(m)', value: queryObj.depth.toFixed(2) }
@@ -310,9 +337,11 @@ export default {
           }
           console.log('ID: ' + feature.id)
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
-        this.handler.setInputAction(function(movement) {
+        this.handler.setInputAction(function (movement) {
           if (that.queryActive) {
             that.queryActive = false
+            that.queryState = false
+            that.dialogShow = false
             if (that.selectFeature && that.selectFeature.primitive.setSelect) that.selectFeature.primitive.setSelect(false)
             else if (that.selectFeature) {
               that.selectFeature.primitive.color = new Cesium.Color(1, 1, 1, 1)
@@ -332,25 +361,55 @@ export default {
       }
     },
     // 弹框位置计算
-    queryDialogPosition(top, left) {
+    queryDialogPosition(top, left, height) {
       this.dialogPosition = 'bottom'
       const bodyWidth = document.body.clientWidth - 200
-      if (top < 80) {
-        // 80为主标题高度
-        this.dialogPosition = 'top'
-        this.dialogTop = top + 145
-      } else if (left < 100) {
-        // 100的一半的弹出框
-        this.dialogPosition = 'left'
-        this.dialogTop = top + 72.5
-        this.dialogLeft = left + 100
-      } else if (left > bodyWidth) {
-        this.dialogPosition = 'right'
-        this.dialogTop = top + 73
-        this.dialogLeft = left - 110
+      if (height === 150) {
+        top = Number(top) - 150
+        left = Number(left) - 100
+        if (top < 80) {
+          // 80为主标题高度
+          this.dialogPosition = 'top'
+          this.dialogTop = top + 145
+        } else if (left < 100) {
+          // 100的一半的弹出框
+          this.dialogPosition = 'left'
+          this.dialogTop = top + 72.5
+          this.dialogLeft = left + 100
+        } else if (left > bodyWidth) {
+          this.dialogPosition = 'right'
+          this.dialogTop = top + 73
+          this.dialogLeft = left - 110
+        } else {
+          this.dialogTop = top
+          this.dialogLeft = left
+        }
+      } else {
+        top = Number(top) - 326
+        left = Number(left) - 100
+        if (top < 80) {
+          // 80为主标题高度
+          this.dialogPosition = 'top'
+          this.dialogTop = top + 326
+          this.dialogLeft = left
+        } else if (left < 100) {
+          // 100的一半的弹出框
+          this.dialogPosition = 'left'
+          this.dialogTop = top + 163
+          this.dialogLeft = left + 100
+        } else if (left > bodyWidth) {
+          this.dialogPosition = 'right'
+          this.dialogTop = top + 163
+          this.dialogLeft = left - 110
+        } else {
+          this.dialogTop = top
+          this.dialogLeft = left
+          this.dialogPosition = 'bottom'
+        }
       }
+      console.log(this.dialogTop)
     },
-    closePanel: function(value) {
+    closePanel: function (value) {
       this.dialogShow = value
     },
     special(e) {
@@ -362,7 +421,7 @@ export default {
     mouseLeave() {
       this.$refs.dropDown.style.height = '0px'
       this.$refs.dropDown.style.top = '-1000px'
-      this.$refs.buttonList.children.forEach(element => {
+      this.$refs.buttonList.children.forEach((element) => {
         element.style.color = 'white'
       })
     }

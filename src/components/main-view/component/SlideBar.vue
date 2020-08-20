@@ -129,7 +129,7 @@ export default {
   margin: 0 auto;
 }
 .el-slider__button {
-  width: 8px !important;
+  width: 16px !important;
   height: 7px !important;
   border-radius: 0px !important;
   background:url('../images/资源 74updatedUI.png') no-repeat !important;
@@ -162,7 +162,7 @@ export default {
   height: 6px;
   position: absolute;
   left: 270px;
-  top: 18px;
+  top: 19px;
   background: url('../images/rightBorder.png') no-repeat;
 }
 .el-slider__button-wrapper{

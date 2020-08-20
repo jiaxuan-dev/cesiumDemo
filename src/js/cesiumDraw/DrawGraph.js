@@ -56,28 +56,30 @@ export default class DrawGraph {
     this._handler.setInputAction(function (event) {
       const pick = new Cesium.Cartesian2(event.position.x, event.position.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
-
+      console.log(cartesian)
       // let pick = new Cesium.Cartesian2(event.position.x, event.position.y);
       // let cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
 
       // console.log(cartesian)
       // 添加实体
-      const markEntity = that._viewer.entities.add({
-        position: cartesian,
-        billboard,
-        label
-      });
-      that.destroyHandeler(); // 停止绘制
-      that.label.label.text = undefined
-      that.label.position = undefined
-      if (typeof callback === 'function') {
-        const cbObj = {
-          id: markEntity.id,
-          position: event.position
+      if (cartesian !== undefined) {
+        const markEntity = that._viewer.entities.add({
+          position: cartesian,
+          billboard,
+          label
+        });
+        that.destroyHandeler(); // 停止绘制
+        that.label.label.text = undefined
+        that.label.position = undefined
+        if (typeof callback === 'function') {
+          const cbObj = {
+            id: markEntity.id,
+            position: event.position
+          }
+          callback(cbObj)
+        } else {
+          console.log('参数的类型不是function')
         }
-        callback(cbObj)
-      } else {
-        console.log('参数的类型不是function')
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
     this.label.label.text = '鼠标左键绘制完结束'
@@ -85,7 +87,9 @@ export default class DrawGraph {
       // 坐标转换
       const pick1 = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick1), that._viewer.scene);
-      that.label.position = cartesian
+      if (cartesian !== undefined) {
+        that.label.position = cartesian
+      }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   }
 
@@ -111,7 +115,9 @@ export default class DrawGraph {
       const pick = new Cesium.Cartesian2(event.position.x, event.position.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
       // let cartesian = that._viewer.scene.camera.pickEllipsoid(event.position, that._viewer.scene.globe.ellipsoid);
-      positions.push(cartesian)
+      if (cartesian !== undefined) {
+        positions.push(cartesian)
+      }
       // 增加坐标点直接赋值会有明显的卡顿所以用Cesium.CallbackProperty
       polylineEntity.polyline.positions = new Cesium.CallbackProperty(function () {
         return positions
@@ -124,13 +130,16 @@ export default class DrawGraph {
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
 
       // let cartesian = that._viewer.scene.camera.pickEllipsoid(event.endPosition, that._viewer.scene.globe.ellipsoid);
-      positions.pop(); // 删除鼠标移动的上一个位置坐标
-      positions.push(cartesian)
+      if (cartesian !== undefined) {
+        positions.pop(); // 删除鼠标移动的上一个位置坐标
+        positions.push(cartesian)
+        that.label.position = cartesian
+      }
+
       // 直接赋值会有明显的卡顿所以用Cesium.CallbackProperty
       polylineEntity.polyline.positions = new Cesium.CallbackProperty(function () {
         return positions
       }, false)
-      that.label.position = cartesian
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     this._handler.setInputAction(function (event) {
       polylineEntity.polyline.positions = positions
@@ -171,7 +180,10 @@ export default class DrawGraph {
     this._handler.setInputAction(function (event) {
       const pick = new Cesium.Cartesian2(event.position.x, event.position.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
-      positions.push(cartesian)
+      if (cartesian !== undefined) {
+        positions.push(cartesian)
+      }
+
       // 增加坐标点直接赋值会有明显的卡顿所以用Cesium.CallbackProperty
       polygonEntity.polygon.hierarchy = new Cesium.CallbackProperty(function () {
         return new Cesium.PolygonHierarchy(positions) // 直接返回positions会报错
@@ -181,14 +193,16 @@ export default class DrawGraph {
       // 坐标转换
       const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
+      if (cartesian !== undefined) {
+        positions.pop(); // 删除鼠标移动的上一个位置坐标
+        positions.push(cartesian)
+        that.label.position = cartesian
+      }
 
-      positions.pop(); // 删除鼠标移动的上一个位置坐标
-      positions.push(cartesian)
       // 直接赋值会有明显的卡顿所以用Cesium.CallbackProperty
       polygonEntity.polygon.hierarchy = new Cesium.CallbackProperty(function () {
         return new Cesium.PolygonHierarchy(positions) // 直接返回positions会报错
       }, false)
-      that.label.position = cartesian
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
     this._handler.setInputAction(function (event) {
       that.destroyHandeler();
@@ -222,29 +236,32 @@ export default class DrawGraph {
     this._handler.setInputAction(function (event) {
       const pick = new Cesium.Cartesian2(event.position.x, event.position.y);
       const origin = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
-
-      const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin); // 创建一个以鼠标左键点击的位置的经纬度为原点的东北上局部坐标系——4*4矩阵
-      options.modelMatrix = modelMatrix
-      const model = that._viewer.scene.primitives.add(Cesium.Model.fromGltf(options)); // 将GLTF模型加载上
-      if (typeof callback === 'function') {
-        const cbObj = {
-          id: model.id,
-          position: event.position
+      if (origin !== undefined) {
+        const modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(origin); // 创建一个以鼠标左键点击的位置的经纬度为原点的东北上局部坐标系——4*4矩阵
+        options.modelMatrix = modelMatrix
+        const model = that._viewer.scene.primitives.add(Cesium.Model.fromGltf(options)); // 将GLTF模型加载上
+        if (typeof callback === 'function') {
+          const cbObj = {
+            id: model.id,
+            position: event.position
+          }
+          callback(cbObj) // 回调返回id
+        } else {
+          console.log('参数的类型不是function')
         }
-        callback(cbObj) // 回调返回id
-      } else {
-        console.log('参数的类型不是function')
+        that.destroyHandeler(); // 停止绘制
+        that.label.label.text = undefined
+        that.label.position = undefined
       }
-      that.destroyHandeler(); // 停止绘制
-      that.label.label.text = undefined
-      that.label.position = undefined
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
     this.label.label.text = '鼠标左键绘制完结束'
     this._handler.setInputAction(function (event) {
       // 坐标转换
       const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
-      that.label.position = cartesian
+      if (cartesian !== undefined) {
+        that.label.position = cartesian
+      }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   }
 }

@@ -25,7 +25,9 @@
         <el-button @click="remove">清除</el-button>
       </div>
       <div class="con">
-        <el-slider @input="changeSpeed" v-model="intervalTime"></el-slider>
+        <el-slider :max="1000" :min="0" @input="changeSpeed" v-model="intervalTime"></el-slider>
+        <!-- <el-button icon="el-icon-circle-plus" circle></el-button>
+        <el-button icon="el-icon-remove" circle></el-button>-->
       </div>
       <div class="con">
         <input multiple style="width: 70px;display:none" ref="file" @input="read" type="file" />
@@ -86,7 +88,7 @@ export default {
         }
       ],
       colorMapValue: '',
-      intervalTime: 0
+      intervalTime: 40
     }
   },
   methods: {
@@ -95,7 +97,7 @@ export default {
     },
     changeSpeed() {
       if (this.mesh !== undefined) {
-        this.mesh.setIntervalTime(this.intervalTime / 100)
+        this.mesh.setIntervalTime(this.intervalTime)
       }
     },
     PauseOrContinue() {
@@ -126,11 +128,23 @@ export default {
     },
     begin() {
       if (this.mesh === undefined) {
-        this.mesh = new DynamicMesh(Viewer, {
-          polygonPositons: this.data.length === 0 ? JSON.parse(JSON.stringify(meshData.data)) : this.data,
-          des: this.datasDes.length === 0 ? JSON.parse(JSON.stringify(meshData.datasDes)) : this.datasDes,
-          colorMap: this.colorMapValue === '' ? 'jet' : this.colorMapValue
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
         })
+        this.mesh = new DynamicMesh(
+          Viewer,
+          {
+            polygonPositons: this.data.length === 0 ? JSON.parse(JSON.stringify(meshData.data)) : this.data,
+            des: this.datasDes.length === 0 ? JSON.parse(JSON.stringify(meshData.datasDes)) : this.datasDes,
+            colorMap: this.colorMapValue === '' ? 'jet' : this.colorMapValue
+          },
+          () => {
+            loading.close()
+          }
+        )
       }
 
       this.$refs.file.value = ''

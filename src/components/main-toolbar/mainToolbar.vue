@@ -48,13 +48,13 @@ export default {
           event: 'undergroundMode',
           img: require('../../assets/image/icon/photography.png')
         },
-        {
-          active: false,
-          show: true,
-          title: '正射',
-          event: 'ortho',
-          img: require('../../assets/image/icon/topview.png')
-        },
+        // {
+        //   active: false,
+        //   show: true,
+        //   title: '正射',
+        //   event: 'ortho',
+        //   img: require('../../assets/image/icon/topview.png')
+        // },
         // {
         //   active: false,
         //   show: true,
@@ -472,6 +472,14 @@ export default {
           Viewer.scene.primitives._primitives[i].show = true
         }
       }
+      this.$refs.tunnelForm.removeall()
+      this.$refs.meshPanel.remove()
+      this.$refs.meshPanel.setVisible(false)
+      this.$refs.tunnelForm.setVisible(false)
+      this.$refs.digHoleForm.setVisible(false)
+      this.$refs.legendForm.setVisible(false)
+      this.$refs.fenceForm.setVisible(false)
+      this.tlShow = false
       this.resetSectionInfo()
       this.resetDrillInfo()
       if (Viewer.scene.globe.clippingPlanes) Viewer.scene.globe.clippingPlanes.enabled = false

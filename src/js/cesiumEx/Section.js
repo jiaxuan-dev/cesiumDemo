@@ -433,20 +433,11 @@ class SectionChildren {
     let color = null
     bool ? (color = Cesium.Color.RED) : (color = this._color)
     attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(new Cesium.Color(color.red, color.green, color.blue, 1))
-    if (this.appearance.material) {
+   if (this.appearance.material) {
       if (!bool) {
-        this.appearance.material = new Cesium.Material({
-          // 于JSON格式来描述materials的机制
-          fabric: {
-            type: 'DiffuseMap',
-            uniforms: {
-              image: this._renderPath
-            }
-          },
-          translucent: false // 显示为半透明
-        })
+        this.appearance.material.uniforms.color = new Cesium.Color(1, 1, 1, 1)
       } else {
-        this.appearance.material = Cesium.Material.fromType('Color')
+        this.appearance.material.uniforms.color = new Cesium.Color(1, 0, 0, 1)
       }
     }
   }

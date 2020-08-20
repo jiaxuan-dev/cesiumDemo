@@ -16,7 +16,7 @@ export default class Roaming {
     this.Lines = this._format(options.Lines)
     this._cartesian3 = this._toCartesian3()
     this.time = Number(options.time)
-    this.callback = callback
+    this.callback = callback || undefined
     this.pitch = 0
     this.height = 0
     this.roll = 0
@@ -275,7 +275,6 @@ export default class Roaming {
      */
   PauseOrContinue(flag) {
     flag = Boolean(flag)
-    this.viewer.clock.shouldAnimate = flag
     if (flag) {
       this.viewer.clock.onTick.addEventListener(this._moveCamera)
     } else {
@@ -287,7 +286,9 @@ export default class Roaming {
     // 退出漫游
     this.endflag = true
     this.viewer.clock.onTick.removeEventListener(this._moveCamera)
-    this.callback()
+    if (this.callback !== undefined && typeof this.callback === 'function') {
+      this.callback()
+    }
   }
 
   again() {

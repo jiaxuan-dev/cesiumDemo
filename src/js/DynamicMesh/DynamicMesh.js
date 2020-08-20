@@ -2,7 +2,8 @@ import * as Cesium from 'cesium/Build/Cesium/Cesium'
 import colormap from 'colormap'
 import * as turf from '@turf/turf'
 export default class DynamicMesh {
-  constructor(viewer, option) {
+  constructor(viewer, option, callback) {
+    this.callback = callback || undefined
     this.viewer = viewer
     this.polygonPositons = option.polygonPositons
     this.smoothHeights = []
@@ -14,7 +15,7 @@ export default class DynamicMesh {
       format: 'float',
       alpha: 1
     })
-    this.speed = 0
+    this.speed = 40
     this._index = 0
     this.primitives = []
     this.linePrimitivearr = []
@@ -249,8 +250,12 @@ export default class DynamicMesh {
   }
 
   addMesh() {
+    if (this.callback !== undefined && typeof this.callback === 'function') {
+      this.callback()
+    }
     let Pindex = 0
-    let seconds = Cesium.JulianDate.addSeconds(Cesium.JulianDate.fromDate(new Date()), this.speed, new Cesium.JulianDate())
+    let seconds = this.viewer.clock.currentTime
+    // console.time('sort');
     this._addMesh = () => {
       // console.log(e)
       if (Pindex < this.linePrimitivearr.length) {
@@ -263,10 +268,15 @@ export default class DynamicMesh {
             this.linePrimitivearr[i].show = true
           }
         }
+        // Pindex = Pindex + 1
         // console.log(Cesium.JulianDate.secondsDifference(seconds, e.currentTime))
-        if (Cesium.JulianDate.secondsDifference(seconds, this.viewer.clock.currentTime) < 1.42) {
+        // console.log(Cesium.JulianDate.secondsDifference(seconds, this.viewer.clock.currentTime))
+        // console.log(seconds)
+        // console.log(this.viewer.clock.currentTime)
+        // console.timeEnd('sort');
+        if (Cesium.JulianDate.secondsDifference(this.viewer.clock.currentTime, seconds) > this.speed / 1000) {
           Pindex = Pindex + 1
-          seconds = Cesium.JulianDate.addSeconds(Cesium.JulianDate.fromDate(new Date()), this.speed, new Cesium.JulianDate())
+          seconds = this.viewer.clock.currentTime
         } else {
 
         }
@@ -332,5 +342,9 @@ export default class DynamicMesh {
 
   setIntervalTime(num) {
     this.speed = num
+  }
+
+  setTips() {
+
   }
 }

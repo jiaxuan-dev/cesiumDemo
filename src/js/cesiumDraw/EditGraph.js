@@ -156,10 +156,12 @@ export default class EditGraph {
     this._handler.setInputAction(function (event) {
       const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
-      if (flag) {
-        markObject.position = cartesian
+      if (cartesian !== undefined) {
+        if (flag) {
+          markObject.position = cartesian
+        }
+        that.label.position = cartesian
       }
-      that.label.position = cartesian
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE) // 鼠标移动
     this._handler.setInputAction(function (event) {
       flag = false
@@ -222,13 +224,15 @@ export default class EditGraph {
       const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
       if (flag) {
-        that._viewer.entities.getById(pickPointId).position = cartesian
-        polylinePos[index] = cartesian
+        if (cartesian !== undefined) {
+          that._viewer.entities.getById(pickPointId).position = cartesian
+          polylinePos[index] = cartesian
+          that.label.position = cartesian
+        }
         lineObject.polyline.positions = new Cesium.CallbackProperty(function () {
           return polylinePos
         }, false)
       }
-      that.label.position = cartesian
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE) // 鼠标移动
     this._handler.setInputAction(function (event) {
       lineObject.polyline.positions = polylinePos
@@ -295,13 +299,17 @@ export default class EditGraph {
       const pick = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick), that._viewer.scene);
       if (flag) {
-        that._viewer.entities.getById(pickPointId).position = cartesian
-        polygonPos[index] = cartesian
+        if (cartesian !== undefined) {
+          that._viewer.entities.getById(pickPointId).position = cartesian
+          polygonPos[index] = cartesian
+        }
         gonObject.polygon.hierarchy = new Cesium.CallbackProperty(function () {
           return new Cesium.PolygonHierarchy(polygonPos)
         }, false)
       }
-      that.label.position = cartesian
+      if (cartesian !== undefined) {
+        that.label.position = cartesian
+      }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE) // 鼠标移动
 
     this._handler.setInputAction(function (event) {
@@ -485,183 +493,188 @@ export default class EditGraph {
       const cartesian1 = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick1), that._viewer.scene);
       const pick2 = new Cesium.Cartesian2(event.endPosition.x, event.endPosition.y);
       const cartesian2 = that._viewer.scene.globe.pick(that._viewer.camera.getPickRay(pick2), that._viewer.scene);
-      that.label.position = cartesian1
+      if (cartesian1 !== undefined) {
+        that.label.position = cartesian1
+      }
+
       // let mat3 = Cesium.Matrix4.getMatrix3(model.modelMatrix, new Cesium.Matrix3());
       // let q = Cesium.Quaternion.fromRotationMatrix(mat3);
       // let hpr = Cesium.HeadingPitchRoll.fromQuaternion(q)
       console.log(axisXflag)
-      if (axisXflag) { // X轴平移
-        // if ((hpr.heading - hpr1.heading) * 180 / Math.PI < 26 && (hpr.heading - hpr1.heading) * 180 / Math.PI > -20 || (hpr.heading - hpr1.heading) * 180 / Math.PI < -290 && (hpr.heading - hpr1.heading) * 180 / Math.PI > -335) {
-        if (cartesian2.x < cartesian1.x) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.x > cartesian1.x) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+      if (cartesian1 !== undefined && cartesian2 !== undefined) {
+        if (axisXflag) { // X轴平移
+          // if ((hpr.heading - hpr1.heading) * 180 / Math.PI < 26 && (hpr.heading - hpr1.heading) * 180 / Math.PI > -20 || (hpr.heading - hpr1.heading) * 180 / Math.PI < -290 && (hpr.heading - hpr1.heading) * 180 / Math.PI > -335) {
+          if (cartesian2.x < cartesian1.x) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.x > cartesian1.x) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          }
+          // } else if ((hpr.heading - hpr1.heading) * 180 / Math.PI > -110 && (hpr.heading - hpr1.heading) * 180 / Math.PI <= -20) {
+          //   if (cartesian2.y > cartesian1.y) {
+          //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+          //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          //   } else if (cartesian2.y < cartesian1.y) {
+          //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+          //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          //   }
+          // }else if ((hpr.heading - hpr1.heading) * 180 / Math.PI > -200 && (hpr.heading - hpr1.heading) * 180 / Math.PI <= -110) {
+          //   if (cartesian2.x < cartesian1.x) {
+          //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+          //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          //   } else if (cartesian2.x > cartesian1.x) {
+          //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
+          //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+          //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          //   }
+          // }
         }
-        // } else if ((hpr.heading - hpr1.heading) * 180 / Math.PI > -110 && (hpr.heading - hpr1.heading) * 180 / Math.PI <= -20) {
-        //   if (cartesian2.y > cartesian1.y) {
-        //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-        //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        //   } else if (cartesian2.y < cartesian1.y) {
-        //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-        //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        //   }
-        // }else if ((hpr.heading - hpr1.heading) * 180 / Math.PI > -200 && (hpr.heading - hpr1.heading) * 180 / Math.PI <= -110) {
-        //   if (cartesian2.x < cartesian1.x) {
-        //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-        //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        //   } else if (cartesian2.x > cartesian1.x) {
-        //     const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(-Cesium.Cartesian3.distance(cartesian1, cartesian2), 0, 0))
-        //     Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-        //     Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        //   }
-        // }
-      }
-      if (axisYflag) { // Y轴平移
-        if (cartesian2.y < cartesian1.y) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, Cesium.Cartesian3.distance(cartesian1, cartesian2), 0))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.y > cartesian1.y) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, -Cesium.Cartesian3.distance(cartesian1, cartesian2), 0))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+        if (axisYflag) { // Y轴平移
+          if (cartesian2.y < cartesian1.y) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, Cesium.Cartesian3.distance(cartesian1, cartesian2), 0))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.y > cartesian1.y) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, -Cesium.Cartesian3.distance(cartesian1, cartesian2), 0))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          }
         }
-      }
-      if (axisZflag) { // Z轴平移
-        if (cartesian2.z > cartesian1.z) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, 0, Cesium.Cartesian3.distance(cartesian1, cartesian2)))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.z < cartesian1.z) {
-          const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, 0, -Cesium.Cartesian3.distance(cartesian1, cartesian2)))
-          Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+        if (axisZflag) { // Z轴平移
+          if (cartesian2.z > cartesian1.z) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, 0, Cesium.Cartesian3.distance(cartesian1, cartesian2)))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.z < cartesian1.z) {
+            const translation = Cesium.Matrix4.fromTranslation(new Cesium.Cartesian3(0, 0, -Cesium.Cartesian3.distance(cartesian1, cartesian2)))
+            Cesium.Matrix4.multiply(model.modelMatrix, translation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, translation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, translation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, translation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, translation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, translation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, translation, axisSphereZ.modelMatrix)
+          }
         }
-      }
-      if (axisSphereXflag) { // X轴旋转
-        if (cartesian2.y > cartesian1.y) {
-          const angel = Cesium.Matrix3.fromRotationX(Cesium.Math.toRadians(1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.y < cartesian1.y) {
-          const angel = Cesium.Matrix3.fromRotationX(Cesium.Math.toRadians(-1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+        if (axisSphereXflag) { // X轴旋转
+          if (cartesian2.y > cartesian1.y) {
+            const angel = Cesium.Matrix3.fromRotationX(Cesium.Math.toRadians(1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.y < cartesian1.y) {
+            const angel = Cesium.Matrix3.fromRotationX(Cesium.Math.toRadians(-1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          }
         }
-      }
-      if (axisSphereYflag) { // Y轴旋转
-        if (cartesian2.x < cartesian1.x) {
-          const angel = Cesium.Matrix3.fromRotationY(Cesium.Math.toRadians(1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.x > cartesian1.x) {
-          const angel = Cesium.Matrix3.fromRotationY(Cesium.Math.toRadians(-1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+        if (axisSphereYflag) { // Y轴旋转
+          if (cartesian2.x < cartesian1.x) {
+            const angel = Cesium.Matrix3.fromRotationY(Cesium.Math.toRadians(1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.x > cartesian1.x) {
+            const angel = Cesium.Matrix3.fromRotationY(Cesium.Math.toRadians(-1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          }
         }
-      }
-      if (axisSphereZflag) { // Z轴旋转
-        if (cartesian2.x < cartesian1.x) {
-          const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
-        } else if (cartesian2.x > cartesian1.x) {
-          const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(-1))
-          const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
-          Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
-          Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
-          Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
-          Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
-          Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+        if (axisSphereZflag) { // Z轴旋转
+          if (cartesian2.x < cartesian1.x) {
+            const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          } else if (cartesian2.x > cartesian1.x) {
+            const angel = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(-1))
+            const rotation = Cesium.Matrix4.fromRotationTranslation(angel)
+            Cesium.Matrix4.multiply(model.modelMatrix, rotation, model.modelMatrix)
+            Cesium.Matrix4.multiply(axisX.modelMatrix, rotation, axisX.modelMatrix)
+            Cesium.Matrix4.multiply(axisY.modelMatrix, rotation, axisY.modelMatrix)
+            Cesium.Matrix4.multiply(axisZ.modelMatrix, rotation, axisZ.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereX.modelMatrix, rotation, axisSphereX.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereY.modelMatrix, rotation, axisSphereY.modelMatrix)
+            Cesium.Matrix4.multiply(axisSphereZ.modelMatrix, rotation, axisSphereZ.modelMatrix)
+          }
         }
       }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE)
