@@ -7,7 +7,7 @@
       show-checkbox
       node-key="id"
       :props="defaultProps"
-      :default-expanded-keys="[]"
+      :default-expanded-keys="[0, 9]"
     ></el-tree>
   </div>
 </template>
@@ -150,7 +150,6 @@ export default {
   },
   methods: {
     addModel(data, bool, children) {
-      console.log(data, bool, children)
       if (bool && data.children === undefined) {
         if (data.data !== undefined) {
           for (const i in data.data) {
@@ -198,7 +197,7 @@ export default {
             }
           }
         }
-      } else if (!bool) {
+      } else {
         for (const i in Viewer.scene.primitives._primitives) {
           if (data.data !== undefined) {
             for (const j in data.data) {
